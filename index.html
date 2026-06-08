@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Suivi Équipe — Team Zohra</title>
@@ -327,7 +329,7 @@ table.dt tr:last-child td{border-bottom:none}
       <div class="fl"><label>Code d acces</label>
         <input type="password" id="pw" placeholder="••••••" autocomplete="off">
       </div>
-      <button class="btnl" id="btnAcceder">Acceder →</button>
+      <button class="btnl" id="btnAcceder" onclick="doLogin()">Acceder →</button>
       <div class="lerr" id="le">Code incorrect.</div>
     </div>
   </div>
@@ -380,20 +382,21 @@ table.dt tr:last-child td{border-bottom:none}
   </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
-window.addEventListener("load", function(){
+document.addEventListener("DOMContentLoaded", function(){
 // ── CONFIG ────────────────────────────────────────────
-firebase.initializeApp({
-  apiKey:"AIzaSyD6OKhtnB8Az10tUiHaxL3OXcUX2RcSnM",
-  authDomain:"suiviequipe-ads2.firebaseapp.com",
-  projectId:"suiviequipe-ads2",
-  storageBucket:"suiviequipe-ads2.firebasestorage.app",
-  messagingSenderId:"830978059276",
-  appId:"1:830978059276:web:3136b047fc52824b0a1229"
-});
-var db = firebase.firestore();
+var db = null;
+try {
+  firebase.initializeApp({
+    apiKey:"AIzaSyD6OKhtnB8Az10tUiHaxL3OXcUX2RcSnM",
+    authDomain:"suiviequipe-ads2.firebaseapp.com",
+    projectId:"suiviequipe-ads2",
+    storageBucket:"suiviequipe-ads2.firebasestorage.app",
+    messagingSenderId:"830978059276",
+    appId:"1:830978059276:web:3136b047fc52824b0a1229"
+  });
+  db = firebase.firestore();
+} catch(e) { console.warn("Firebase not available:", e.message); }
 
 // ── USERS ─────────────────────────────────────────────
 var USERS = {
@@ -433,30 +436,30 @@ function tk(name){return "tz_tbl_v5_"+name+"_"+mkey();}
 function getData(uid){try{return JSON.parse(localStorage.getItem(sk(uid)))||{};}catch(e){return {};}}
 function setData(uid,d){
   localStorage.setItem(sk(uid),JSON.stringify(d));
-  db.collection("suivi").doc(sk(uid)).set(d).catch(function(){});
+  db&&db.collection("suivi").doc(sk(uid)).set(d).catch(function(){});
 }
 function getTable(name){try{return JSON.parse(localStorage.getItem(tk(name)))||[];}catch(e){return [];}}
 function setTable(name,rows){
   localStorage.setItem(tk(name),JSON.stringify(rows));
-  db.collection("tables").doc(tk(name)).set({rows:rows}).catch(function(){});
+  db&&db.collection("tables").doc(tk(name)).set({rows:rows}).catch(function(){});
 }
 function getMsgs(uid){try{return JSON.parse(localStorage.getItem("tz_msg_"+uid))||[];}catch(e){return [];}}
 function setMsgs(uid,m){
   localStorage.setItem("tz_msg_"+uid,JSON.stringify(m));
-  db.collection("messages").doc(uid).set({msgs:m}).catch(function(){});
+  db&&db.collection("messages").doc(uid).set({msgs:m}).catch(function(){});
 }
 
 // ── LOAD FROM FIREBASE ────────────────────────────────
 function loadFromFirebase(cb){
   var keys=Object.keys(USERS), proms=[];
   keys.forEach(function(uid){
-    proms.push(db.collection("suivi").doc(sk(uid)).get().then(function(doc){if(doc.exists)localStorage.setItem(sk(uid),JSON.stringify(doc.data()));}).catch(function(){}));
-    proms.push(db.collection("messages").doc(uid).get().then(function(doc){if(doc.exists&&doc.data().msgs)localStorage.setItem("tz_msg_"+uid,JSON.stringify(doc.data().msgs));}).catch(function(){}));
+    proms.push(db&&db.collection("suivi").doc(sk(uid)).get().then(function(doc){if(doc.exists)localStorage.setItem(sk(uid),JSON.stringify(doc.data()));}).catch(function(){}));
+    proms.push(db&&db.collection("messages").doc(uid).get().then(function(doc){if(doc.exists&&doc.data().msgs)localStorage.setItem("tz_msg_"+uid,JSON.stringify(doc.data().msgs));}).catch(function(){}));
   });
   var tbls=["strat_crea","perfads_scaling","perfads_off","perfads_winner"];
   keys.filter(function(k){return USERS[k].role==="mv";}).forEach(function(uid){tbls.push("perf_"+uid);tbls.push("nperf_"+uid);});
   tbls.forEach(function(n){
-    proms.push(db.collection("tables").doc(tk(n)).get().then(function(doc){if(doc.exists&&doc.data().rows)localStorage.setItem(tk(n),JSON.stringify(doc.data().rows));}).catch(function(){}));
+    proms.push(db&&db.collection("tables").doc(tk(n)).get().then(function(doc){if(doc.exists&&doc.data().rows)localStorage.setItem(tk(n),JSON.stringify(doc.data().rows));}).catch(function(){}));
   });
   Promise.all(proms).then(function(){
     loadAnns(function(){loadObjectifs(cb);});
@@ -826,7 +829,7 @@ function doLogin(){
   document.getElementById("mc").innerHTML='<div style="text-align:center;padding:3rem;color:var(--tx2)"><div style="font-size:32px;margin-bottom:1rem">⏳</div><div>Chargement...</div></div>';
   WEEKS=getWeeks();
   loadFromFirebase(function(){rerender();});
-}
+};
 function doLogout(){
   currentUser=null;
   document.getElementById("app").style.display="none";
@@ -1132,10 +1135,10 @@ function renderAdmin(tab){
 function getAnns(){try{return JSON.parse(localStorage.getItem("tz_ann"))||[];}catch(e){return [];}}
 function setAnns(a){
   localStorage.setItem("tz_ann",JSON.stringify(a));
-  db.collection("config").doc("announcements").set({list:a}).catch(function(){});
+  db&&db.collection("config").doc("announcements").set({list:a}).catch(function(){});
 }
 function loadAnns(cb){
-  db.collection("config").doc("announcements").get().then(function(doc){
+  db&&db.collection("config").doc("announcements").get().then(function(doc){
     if(doc.exists&&doc.data().list) localStorage.setItem("tz_ann",JSON.stringify(doc.data().list));
     cb();
   }).catch(cb);
@@ -1164,10 +1167,10 @@ function showAnnZone(){
 function getObjectifs(){try{return JSON.parse(localStorage.getItem("tz_obj"))||{};}catch(e){return {};}}
 function setObjectifs(o){
   localStorage.setItem("tz_obj",JSON.stringify(o));
-  db.collection("config").doc("objectifs").set(o).catch(function(){});
+  db&&db.collection("config").doc("objectifs").set(o).catch(function(){});
 }
 function loadObjectifs(cb){
-  db.collection("config").doc("objectifs").get().then(function(doc){
+  db&&db.collection("config").doc("objectifs").get().then(function(doc){
     if(doc.exists) localStorage.setItem("tz_obj",JSON.stringify(doc.data()));
     cb();
   }).catch(cb);
@@ -1187,7 +1190,8 @@ function exportCSV(uid){
     var dd=String(day).padStart(2,"0")+"/"+String(curMonth.m+1).padStart(2,"0")+"/"+curMonth.y;
     rows.push(dd+","+JOURS[dow]+","+(d["cmd_"+day]||0)+","+(d["lj_"+day]||0)+","+(isSat?ws:""));
   }
-  var csv=rows.join("\n");
+  var csv=rows.join("
+");
   var blob=new Blob([csv],{type:"text/csv"});
   var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
   a.download="suivi_"+uid+"_"+monthLabel().replace(" ","_")+".csv"; a.click();
@@ -1204,7 +1208,8 @@ function exportAllCSV(){
       rows.push(USERS[uid].name+","+dd+","+JOURS[dow]+","+(d["cmd_"+day]||0)+","+(d["lj_"+day]||0));
     }
   });
-  var csv=rows.join("\n");
+  var csv=rows.join("
+");
   var blob=new Blob([csv],{type:"text/csv"});
   var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
   a.download="recap_equipe_"+monthLabel().replace(" ","_")+".csv"; a.click();
@@ -1235,7 +1240,17 @@ setInterval(function(){
   }
 },60000);
 
-}); // end window.onload
+// ── EXPOSE GLOBALS ────────────────────────────────────
+window.doLogin=doLogin; window.doLogout=doLogout;
+window.toggleMP=toggleMP; window.applyMonth=applyMonth;
+window.sendMsg=sendMsg; window.saveField=saveField;
+window.saveGenCell=saveGenCell; window.saveMultiCheck=saveMultiCheck;
+window.addGenRow=addGenRow; window.delGenRow=delGenRow;
+window.exportCSV=exportCSV; window.exportAllCSV=exportAllCSV;
+window.sendAnnouncement=sendAnnouncement; window.saveObjectif=saveObjectif;
+window.sbNav=sbNav; window.renderAdmin=renderAdmin;
+
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>
