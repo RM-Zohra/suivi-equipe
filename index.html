@@ -600,7 +600,7 @@ function renderMembre(uid){
   var curTab=window._memTab||"data";
   var unread=hasUnread(uid);
   var html='<div class="page-title">'+u.name+'</div>';
-  html+='<div class="page-sub">\'+monthLabel()+\' · Consulte tes données</div>';
+  html+='<div class="page-sub">'+monthLabel()+' · Consulte tes données</div>';
   html+='<div class="view-tabs">';
   html+='<button class="vtab'+(curTab==="data"?" active":"")+'" onclick="switchMemTab(\'data\')">📊 Mes données</button>';
   html+='<button class="vtab'+(curTab==="msg"?" active":"")+'" onclick="switchMemTab(\'msg\')">';
@@ -686,7 +686,7 @@ function renderAdmin(tab){
   var totalUnread=memberKeys.filter(function(uid){return getMsgs(uid).some(function(m){return m.to==="admin"&&!m.read;});}).length;
 
   var html='<div class="page-title">Dashboard RM 💙</div>';
-  html+='<div class="page-sub">\'+monthLabel()+\' · Vue complète équipe</div>';
+  html+='<div class="page-sub">'+monthLabel()+' · Vue complète équipe</div>';
   html+='<div class="view-tabs">';
   html+='<button class="vtab'+(curTab==="recap"?" active":"")+'" onclick="adTab(\'recap\')">📊 Recap</button>';
   html+='<button class="vtab'+(curTab==="eval"?" active":"")+'" onclick="adTab(\'eval\')">🏆 Évaluation</button>';
@@ -1075,7 +1075,7 @@ function renderMembre(uid){
   var curTab=window._memTab||"data";
   var unread=hasUnread(uid);
   var html='<div class="page-title">'+u.name+'</div>';
-  html+='<div class="page-sub">\'+monthLabel()+\' · Consulte tes données</div>';
+  html+='<div class="page-sub">'+monthLabel()+' · Consulte tes données</div>';
   html+='<div class="view-tabs">';
   html+='<button class="vtab'+(curTab==="data"?" active":"")+'" onclick="switchMemTab(\'data\')">📊 Mes données</button>';
   html+='<button class="vtab'+(curTab==="msg"?" active":"")+'" onclick="switchMemTab(\'msg\')">';
@@ -1161,7 +1161,7 @@ function renderAdmin(tab){
   var totalUnread=memberKeys.filter(function(uid){return getMsgs(uid).some(function(m){return m.to==="admin"&&!m.read;});}).length;
 
   var html='<div class="page-title">Dashboard RM 💙</div>';
-  html+='<div class="page-sub">\'+monthLabel()+\' · Vue complète équipe</div>';
+  html+='<div class="page-sub">'+monthLabel()+' · Vue complète équipe</div>';
   html+='<div class="view-tabs">';
   html+='<button class="vtab'+(curTab==="recap"?" active":"")+'" onclick="adTab(\'recap\')">📊 Recap</button>';
   html+='<button class="vtab'+(curTab==="eval"?" active":"")+'" onclick="adTab(\'eval\')">🏆 Évaluation</button>';
@@ -1422,7 +1422,7 @@ window.renderMV = function(uid){
   var unread=hasUnread(uid);
 
   var html='<div class="page-title">'+u.name+'</div>';
-  html+='<div class="page-sub">\'+monthLabel()+\'</div>';
+  html+='<div class="page-sub">'+monthLabel()+'</div>';
   html+='<div class="view-tabs">';
   html+='<button class="vtab'+(curTab==="data"?" active":"")+'" onclick="mvTab(\'data\')">📊 Données</button>';
   html+='<button class="vtab'+(curTab==="perf"?" active":"")+'" onclick="mvTab(\'perf\')">✅ Créatives +</button>';
@@ -1545,7 +1545,7 @@ renderSup = function(){
   var curTab=window._stab||"remarques";
 
   var html='<div class="page-title">Superviseur Créatif</div>';
-  html+='<div class="page-sub">\'+monthLabel()+\'</div>';
+  html+='<div class="page-sub">'+monthLabel()+'</div>';
   html+='<div class="view-tabs">';
   html+='<button class="vtab'+(curTab==="remarques"?" active":"")+'" onclick="stab(\'remarques\')">📝 Remarques</button>';
   html+='<button class="vtab'+(curTab==="strat"?" active":"")+'" onclick="stab(\'strat\')">🎯 Stratégie Créa</button>';
@@ -1583,7 +1583,7 @@ renderAdmin = function(tab){
   }).length;
 
   var html='<div class="page-title">Dashboard RM 💙</div>';
-  html+='<div class="page-sub">\'+monthLabel()+\' · Vue complète</div>';
+  html+='<div class="page-sub">'+monthLabel()+' · Vue complète</div>';
   html+='<div class="view-tabs">';
   ['recap','eval','perf','nperf','strat','perfads','msg'].forEach(function(t){
     var labels={'recap':'📊 Recap','eval':'🏆 Évaluation','perf':'✅ Créatives +',
