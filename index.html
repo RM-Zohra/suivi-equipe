@@ -333,7 +333,7 @@ function weekSums(uid){
   return WEEKS.map(function(w){var s=0;for(var i=w[0];i<=w[1];i++)s+=parseInt(d['cmd_'+i]||0);return s;});
 }
 function totalCmds(uid){return weekSums(uid).reduce(function(a,b){return a+b;},0);}
-function totalLivree(uid){var d=getData(uid),s=0;for(var i=1;i<=30;i++)s+=parseInt(d['lj_'+i]||0);return s;}
+function totalLivree(uid){var d=getData(uid),s=0;for(var i=1;i<=daysInMonth(currentMonth.m,currentMonth.y);i++)s+=parseInt(d['lj_'+i]||0);return s;}
 function todayD(){var n=new Date();return(n.getMonth()===currentMonth.m&&n.getFullYear()===currentMonth.y)?n.getDate():0;}
 function curWeek(){
   var day=todayD();if(!day)return 0;
@@ -389,8 +389,8 @@ function renderTable(uid,viewerRole){
   var html='<div class="table-wrap"><table class="dt"><thead><tr><th>Date</th><th>Jour</th>';
   cols.forEach(function(c){html+='<th>'+c.label+'</th>';});
   html+='</tr></thead><tbody>';
-  for(var day=1;day<=30;day++){
-    var dt=new Date(2026,5,day),dow=dt.getDay(),isWE=(dow===0||dow===6),isSat=(dow===6),isToday=(day===td);
+  for(var day=1;day<=daysInMonth(currentMonth.m,currentMonth.y);day++){
+    var dt=new Date(currentMonth.y,currentMonth.m,day),dow=dt.getDay(),isWE=(dow===0||dow===6),isSat=(dow===6),isToday=(day===td);
     var wi=WEEKS.findIndex(function(w){return day>=w[0]&&day<=w[1];});
     html+='<tr class="'+(isWE?"we ":"")+(isToday?"tod":"")+'">';
     html+='<td>'+String(day).padStart(2,"0")+'/06/2026</td>';
@@ -504,7 +504,7 @@ function renderMembre(uid){
   var curTab=window._memTab||"data";
   var unread=hasUnread(uid);
   var html='<div class="page-title">'+u.name+'</div>';
-  html+='<div class="page-sub">Juin 2026 · Consulte tes données</div>';
+  html+='<div class="page-sub">\'+monthLabel()+\' · Consulte tes données</div>';
   html+='<div class="view-tabs">';
   html+='<button class="vtab'+(curTab==="data"?" active":"")+'" onclick="switchMemTab(\'data\')">📊 Mes données</button>';
   html+='<button class="vtab'+(curTab==="msg"?" active":"")+'" onclick="switchMemTab(\'msg\')">';
@@ -590,7 +590,7 @@ function renderAdmin(tab){
   var totalUnread=memberKeys.filter(function(uid){return getMsgs(uid).some(function(m){return m.to==="admin"&&!m.read;});}).length;
 
   var html='<div class="page-title">Dashboard RM 💙</div>';
-  html+='<div class="page-sub">Juin 2026 · Vue complète équipe</div>';
+  html+='<div class="page-sub">\'+monthLabel()+\' · Vue complète équipe</div>';
   html+='<div class="view-tabs">';
   html+='<button class="vtab'+(curTab==="recap"?" active":"")+'" onclick="adTab(\'recap\')">📊 Recap</button>';
   html+='<button class="vtab'+(curTab==="eval"?" active":"")+'" onclick="adTab(\'eval\')">🏆 Évaluation</button>';
@@ -665,8 +665,8 @@ function renderAdmin(tab){
     var cree=totalCmds(uid),livree=totalLivree(uid),pct=cree>0?Math.round(livree/cree*100):0;
     var html='<div class="detail-card"><div class="detail-title">📅 '+USERS[uid].name+'</div>';
     html+='<div class="bubble-grid">';
-    for(var day=1;day<=30;day++){
-      var dt=new Date(2026,5,day),isWE=(dt.getDay()===0||dt.getDay()===6),v=parseInt(d['cmd_'+day]||0);
+    for(var day=1;day<=daysInMonth(currentMonth.m,currentMonth.y);day++){
+      var dt=new Date(currentMonth.y,currentMonth.m,day),isWE=(dt.getDay()===0||dt.getDay()===6),v=parseInt(d['cmd_'+day]||0);
       html+='<div class="bub'+(isWE?" we":"")+'">'+'<div class="bd">'+String(day).padStart(2,"0")+'/06</div>'+'<div class="bv'+(v>0?" has":"")+'">'+v+'</div></div>';
     }
     html+='</div>';
@@ -773,7 +773,13 @@ window.saveMultiCheck=function(el){
 };
 
 window.addGenRow=function(name){
-  var rows=getTable(name); rows.push({}); setTable(name,rows);
+  var rows=getTable(name);
+  var now=new Date();
+  var dd=String(now.getDate()).padStart(2,"0");
+  var mm=String(now.getMonth()+1).padStart(2,"0");
+  var yyyy=now.getFullYear();
+  rows.push({date:dd+"/"+mm+"/"+yyyy});
+  setTable(name,rows);
   // re-render current view
   if(currentUser) {
     var role=USERS[currentUser].role;
@@ -841,7 +847,7 @@ window.renderMV = function(uid){
   var unread=hasUnread(uid);
 
   var html='<div class="page-title">'+u.name+'</div>';
-  html+='<div class="page-sub">Juin 2026</div>';
+  html+='<div class="page-sub">\'+monthLabel()+\'</div>';
   html+='<div class="view-tabs">';
   html+='<button class="vtab'+(curTab==="data"?" active":"")+'" onclick="mvTab(\'data\')">📊 Données</button>';
   html+='<button class="vtab'+(curTab==="perf"?" active":"")+'" onclick="mvTab(\'perf\')">✅ Créatives +</button>';
@@ -964,7 +970,7 @@ renderSup = function(){
   var curTab=window._stab||"remarques";
 
   var html='<div class="page-title">Superviseur Créatif</div>';
-  html+='<div class="page-sub">Juin 2026</div>';
+  html+='<div class="page-sub">\'+monthLabel()+\'</div>';
   html+='<div class="view-tabs">';
   html+='<button class="vtab'+(curTab==="remarques"?" active":"")+'" onclick="stab(\'remarques\')">📝 Remarques</button>';
   html+='<button class="vtab'+(curTab==="strat"?" active":"")+'" onclick="stab(\'strat\')">🎯 Stratégie Créa</button>';
@@ -1002,7 +1008,7 @@ renderAdmin = function(tab){
   }).length;
 
   var html='<div class="page-title">Dashboard RM 💙</div>';
-  html+='<div class="page-sub">Juin 2026 · Vue complète</div>';
+  html+='<div class="page-sub">\'+monthLabel()+\' · Vue complète</div>';
   html+='<div class="view-tabs">';
   ['recap','eval','perf','nperf','strat','perfads','msg'].forEach(function(t){
     var labels={'recap':'📊 Recap','eval':'🏆 Évaluation','perf':'✅ Créatives +',
@@ -1119,8 +1125,8 @@ renderAdmin = function(tab){
     var cree=totalCmds(uid),livree=totalLivree(uid),pct=cree>0?Math.round(livree/cree*100):0;
     var html='<div class="detail-card"><div class="detail-title">📅 '+USERS[uid].name+'</div>';
     html+='<div class="bubble-grid">';
-    for(var day=1;day<=30;day++){
-      var dt=new Date(2026,5,day),isWE=(dt.getDay()===0||dt.getDay()===6),v=parseInt(d['cmd_'+day]||0);
+    for(var day=1;day<=daysInMonth(currentMonth.m,currentMonth.y);day++){
+      var dt=new Date(currentMonth.y,currentMonth.m,day),isWE=(dt.getDay()===0||dt.getDay()===6),v=parseInt(d['cmd_'+day]||0);
       html+='<div class="bub'+(isWE?" we":"")+'">'+'<div class="bd">'+String(day).padStart(2,"0")+'/06</div>'+'<div class="bv'+(v>0?" has":"")+'">'+v+'</div></div>';
     }
     html+='</div>';
