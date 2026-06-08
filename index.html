@@ -329,7 +329,7 @@ table.dt tr:last-child td{border-bottom:none}
       <div class="fl"><label>Code d acces</label>
         <input type="password" id="pw" placeholder="••••••" autocomplete="off">
       </div>
-      <button class="btnl" id="btnAcceder" onclick="doLogin()">Acceder →</button>
+      <button class="btnl" id="btnAcceder" type="button">Acceder →</button>
       <div class="lerr" id="le">Code incorrect.</div>
     </div>
   </div>
@@ -431,6 +431,15 @@ function curWk(){var d=todayD();if(!d)return 0;var w=getWeeks();return w.findInd
 function isReadOnly(){var n=new Date();return curMonth.y<n.getFullYear()||(curMonth.y===n.getFullYear()&&curMonth.m<n.getMonth());}
 
 // ── STORAGE ───────────────────────────────────────────
+
+function escapeHTML(value){
+  return String(value == null ? "" : value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
 function sk(uid){return "tz_v5_"+uid+"_"+mkey();}
 function tk(name){return "tz_tbl_v5_"+name+"_"+mkey();}
 function getData(uid){try{return JSON.parse(localStorage.getItem(sk(uid)))||{};}catch(e){return {};}}
@@ -723,7 +732,7 @@ function renderChat(uid, viewer){
   var h='<div class="cw"><div class="ch"><div class="cdot"></div> Message avec RM — Latreche Zohra</div>';
   h+='<div class="cms" id="cms">';
   if(!msgs.length)h+='<div class="nm2">Aucun message 💬</div>';
-  msgs.forEach(function(m){h+='<div class="msg '+(m.from===viewer?"sent":"recv")+'">'+m.text+'<div class="mmt">'+m.time+'</div></div>';});
+  msgs.forEach(function(m){h+='<div class="msg '+(m.from===viewer?"sent":"recv")+'">'+escapeHTML(m.text)+'<div class="mmt">'+escapeHTML(m.time)+'</div></div>';});
   h+='</div>';
   h+='<div class="cir"><input class="cin" id="cin" placeholder="Ecrire un message..." onkeydown="if(event.key===\'Enter\')sendMsg(\''+uid+'\',\''+viewer+'\')">';
   h+='<button class="csb" onclick="sendMsg(\''+uid+'\',\''+viewer+'\')">Envoyer</button></div></div>';
@@ -815,28 +824,21 @@ document.getElementById("btnAcceder").addEventListener("click", doLogin);
 document.getElementById("pw").addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
 
 function doLogin(){
-  var uid = document.getElementById("su").value;
-  var pass = document.getElementById("pw").value.trim();
-  var err = document.getElementById("le");
-
-  if(!uid){ 
-    err.style.display="block"; 
-    err.textContent="Selectionne ton profil."; 
-    return; 
-  }
-
-  // Trim aussi le mot de passe stocké pour éviter les surprises
-  var storedPass = USERS[uid] ? String(USERS[uid].pass).trim() : null;
-
-  if(!storedPass || storedPass !== pass){ 
-    err.style.display="block"; 
-    err.textContent="Code incorrect."; 
-    // Debug temporaire — supprime après correction
-    console.log("uid:", uid, "| saisi:", pass, "| stocké:", storedPass);
-    return; 
-  }
-  // ... reste du code
-}
+  var uid=document.getElementById("su").value;
+  var pass=document.getElementById("pw").value.trim();
+  var err=document.getElementById("le");
+  if(!uid){err.style.display="block";err.textContent="Selectionne ton profil.";return;}
+  if(!USERS[uid]||USERS[uid].pass!==pass){err.style.display="block";err.textContent="Code incorrect.";return;}
+  err.style.display="none";
+  currentUser=uid;
+  document.getElementById("ls").style.display="none";
+  document.getElementById("app").style.display="flex";
+  document.getElementById("tav").textContent=USERS[uid].name[0];
+  document.getElementById("tnm").textContent=USERS[uid].name.split(" ")[0];
+  document.getElementById("mc").innerHTML='<div style="text-align:center;padding:3rem;color:var(--tx2)"><div style="font-size:32px;margin-bottom:1rem">⏳</div><div>Chargement...</div></div>';
+  WEEKS=getWeeks();
+  loadFromFirebase(function(){rerender();});
+};
 function doLogout(){
   currentUser=null;
   document.getElementById("app").style.display="none";
@@ -1037,7 +1039,7 @@ function renderAdmin(tab){
       var obj=objs[uid+mkey()]||0, cree=totalCmds(uid), pct=obj>0?Math.min(Math.round(cree/obj*100),100):0;
       h+='<div class="obj-card"><div class="obj-name">'+USERS[uid].name+'</div>';
       h+='<div style="display:flex;align-items:center;gap:.5rem">';
-      h+='<input class="obj-input" type="number" min="0" value="'+obj+'" onchange="saveObjectif(''+uid+'',this.value);rerender()" placeholder="Obj.">';
+      h+='<input class="obj-input" type="number" min="0" value="'+obj+'" onchange="saveObjectif(\''+uid+'\',this.value);rerender()" placeholder="Obj.">';
       h+='<div style="flex:1"><div class="obj-bar-bg"><div class="obj-bar-fill" style="width:'+pct+'%"></div></div>';
       h+='<div class="obj-nums"><span>'+cree+' / '+(obj||'?')+'</span><span class="obj-pct">'+pct+'%</span></div></div>';
       h+='</div></div>';
@@ -1165,9 +1167,9 @@ function showAnnZone(){
   var z=document.getElementById("ann-zone"); if(!z)return;
   z.style.display="block";
   z.innerHTML='<div class="ann-card"><div class="ann-title">📢 Annonce de la RM</div>'
-    +'<div class="ann-text">'+latest.text+'</div>'
-    +'<div class="ann-time">'+latest.time+'</div>'
-    +'<button class="ann-close" onclick="document.getElementById('ann-zone').style.display='none'">×</button></div>';
+    +'<div class="ann-text">'+escapeHTML(latest.text)+'</div>'
+    +'<div class="ann-time">'+escapeHTML(latest.time)+'</div>'
+    +'<button class="ann-close" onclick="document.getElementById(\'ann-zone\').style.display=\'none\'">×</button></div>';
 }
 
 // ── OBJECTIFS ─────────────────────────────────────────
