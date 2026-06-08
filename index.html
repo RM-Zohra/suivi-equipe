@@ -815,21 +815,28 @@ document.getElementById("btnAcceder").addEventListener("click", doLogin);
 document.getElementById("pw").addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
 
 function doLogin(){
-  var uid=document.getElementById("su").value;
-  var pass=document.getElementById("pw").value.trim();
-  var err=document.getElementById("le");
-  if(!uid){err.style.display="block";err.textContent="Selectionne ton profil.";return;}
-  if(!USERS[uid]||USERS[uid].pass!==pass){err.style.display="block";err.textContent="Code incorrect.";return;}
-  err.style.display="none";
-  currentUser=uid;
-  document.getElementById("ls").style.display="none";
-  document.getElementById("app").style.display="flex";
-  document.getElementById("tav").textContent=USERS[uid].name[0];
-  document.getElementById("tnm").textContent=USERS[uid].name.split(" ")[0];
-  document.getElementById("mc").innerHTML='<div style="text-align:center;padding:3rem;color:var(--tx2)"><div style="font-size:32px;margin-bottom:1rem">⏳</div><div>Chargement...</div></div>';
-  WEEKS=getWeeks();
-  loadFromFirebase(function(){rerender();});
-};
+  var uid = document.getElementById("su").value;
+  var pass = document.getElementById("pw").value.trim();
+  var err = document.getElementById("le");
+
+  if(!uid){ 
+    err.style.display="block"; 
+    err.textContent="Selectionne ton profil."; 
+    return; 
+  }
+
+  // Trim aussi le mot de passe stocké pour éviter les surprises
+  var storedPass = USERS[uid] ? String(USERS[uid].pass).trim() : null;
+
+  if(!storedPass || storedPass !== pass){ 
+    err.style.display="block"; 
+    err.textContent="Code incorrect."; 
+    // Debug temporaire — supprime après correction
+    console.log("uid:", uid, "| saisi:", pass, "| stocké:", storedPass);
+    return; 
+  }
+  // ... reste du code
+}
 function doLogout(){
   currentUser=null;
   document.getElementById("app").style.display="none";
