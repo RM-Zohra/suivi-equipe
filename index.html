@@ -633,7 +633,7 @@ function mkSB(role,active){
   });
   sb.innerHTML=h;
 }
-function sbNav(tab){
+window.sbNav = function sbNav(tab){
   var r=U[cu].r;
   if(r==="admin")rAdmin(tab);
   else if(r==="assistant"){window._at=tab;rAsst();}
@@ -896,6 +896,14 @@ function rAdmin(tab){
     },200);
   }
 }
+
+// EXPOSE ALL GLOBALS
+window.sbNav=sbNav; window.doLogin=doLogin; window.doLogout=doLogout;
+window.saveField=saveField; window.saveGen=saveGen; window.saveCheck=saveCheck;
+window.addRow=addRow; window.delRow=delRow; window.saveObj=saveObj;
+window.exportCSV=exportCSV; window.exportAll=exportAll; window.sendAnn=sendAnn;
+window.doSendMsg=doSendMsg; window.rAdmin=rAdmin; window.rAsst=rAsst;
+window.rSup=rSup; window.rMV=rMV; window.rMem=rMem;
 </script>
 </body>
 </html>
