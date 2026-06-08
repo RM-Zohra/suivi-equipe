@@ -329,7 +329,7 @@ table.dt tr:last-child td{border-bottom:none}
       <div class="fl"><label>Code d acces</label>
         <input type="password" id="pw" placeholder="••••••" autocomplete="off">
       </div>
-      <button class="btnl" id="btnAcceder" type="button">Acceder →</button>
+      <button class="btnl" id="btnAcceder" onclick="doLogin()">Acceder →</button>
       <div class="lerr" id="le">Code incorrect.</div>
     </div>
   </div>
@@ -1030,7 +1030,7 @@ function renderAdmin(tab){
       var obj=objs[uid+mkey()]||0, cree=totalCmds(uid), pct=obj>0?Math.min(Math.round(cree/obj*100),100):0;
       h+='<div class="obj-card"><div class="obj-name">'+USERS[uid].name+'</div>';
       h+='<div style="display:flex;align-items:center;gap:.5rem">';
-      h+='<input class="obj-input" type="number" min="0" value="'+obj+'" onchange="saveObjectif(\''+uid+'\',this.value);rerender()" placeholder="Obj.">';
+      h+='<input class="obj-input" type="number" min="0" value="'+obj+'" onchange="saveObjectif(''+uid+'',this.value);rerender()" placeholder="Obj.">';
       h+='<div style="flex:1"><div class="obj-bar-bg"><div class="obj-bar-fill" style="width:'+pct+'%"></div></div>';
       h+='<div class="obj-nums"><span>'+cree+' / '+(obj||'?')+'</span><span class="obj-pct">'+pct+'%</span></div></div>';
       h+='</div></div>';
@@ -1160,7 +1160,7 @@ function showAnnZone(){
   z.innerHTML='<div class="ann-card"><div class="ann-title">📢 Annonce de la RM</div>'
     +'<div class="ann-text">'+latest.text+'</div>'
     +'<div class="ann-time">'+latest.time+'</div>'
-    +'<button class="ann-close" onclick="document.getElementById(\'ann-zone\').style.display=\'none\'">×</button></div>';
+    +'<button class="ann-close" onclick="document.getElementById('ann-zone').style.display='none'">×</button></div>';
 }
 
 // ── OBJECTIFS ─────────────────────────────────────────
@@ -1190,7 +1190,8 @@ function exportCSV(uid){
     var dd=String(day).padStart(2,"0")+"/"+String(curMonth.m+1).padStart(2,"0")+"/"+curMonth.y;
     rows.push(dd+","+JOURS[dow]+","+(d["cmd_"+day]||0)+","+(d["lj_"+day]||0)+","+(isSat?ws:""));
   }
-  var csv=rows.join("\n");
+  var csv=rows.join("
+");
   var blob=new Blob([csv],{type:"text/csv"});
   var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
   a.download="suivi_"+uid+"_"+monthLabel().replace(" ","_")+".csv"; a.click();
@@ -1207,7 +1208,8 @@ function exportAllCSV(){
       rows.push(USERS[uid].name+","+dd+","+JOURS[dow]+","+(d["cmd_"+day]||0)+","+(d["lj_"+day]||0));
     }
   });
-  var csv=rows.join("\n");
+  var csv=rows.join("
+");
   var blob=new Blob([csv],{type:"text/csv"});
   var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
   a.download="recap_equipe_"+monthLabel().replace(" ","_")+".csv"; a.click();
