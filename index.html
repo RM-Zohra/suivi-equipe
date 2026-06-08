@@ -226,7 +226,70 @@ table.dt tr:last-child td{border-bottom:none}
 .bu.we{border-color:var(--bll)}
 .rob{background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:.5rem 1rem;
   font-size:12px;font-weight:600;color:#92400E;margin-bottom:.75rem;display:flex;align-items:center;gap:6px}
+
+/* OBJECTIFS */
+.obj-bar-bg{background:var(--bg3);border-radius:20px;height:10px;overflow:hidden;margin:.4rem 0}
+.obj-bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--bl),var(--pu));transition:width .6s}
+.obj-card{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:.9rem 1rem;display:flex;flex-direction:column;gap:.3rem}
+.obj-name{font-size:12px;font-weight:700;color:var(--tx)}
+.obj-nums{display:flex;justify-content:space-between;font-size:11px;color:var(--tx2)}
+.obj-pct{font-size:16px;font-weight:700;color:var(--bl)}
+.obj-input{background:var(--bg3);border:1.5px solid var(--bd);border-radius:8px;padding:.3rem .6rem;
+  color:var(--tx);font-size:13px;font-weight:600;width:80px;outline:none;text-align:center}
+.obj-input:focus{border-color:var(--bl)}
+/* ANNONCE */
+.ann-card{background:linear-gradient(135deg,var(--bll),#EDE9FE);border:1.5px solid var(--bl);
+  border-radius:14px;padding:1rem 1.25rem;margin-bottom:1rem;position:relative}
+.ann-title{font-size:13px;font-weight:700;color:var(--bl2);margin-bottom:.3rem;display:flex;align-items:center;gap:6px}
+.ann-text{font-size:13px;color:var(--tx);line-height:1.5}
+.ann-time{font-size:10px;color:var(--tx3);margin-top:.4rem}
+.ann-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:var(--tx3);cursor:pointer;font-size:16px}
+/* CHART */
+.chart-card{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:1rem;margin-bottom:1.25rem}
+.chart-title{font-size:12px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem}
+/* WINNER */
+.winner-banner{background:linear-gradient(135deg,#FEF08A,#FDE68A);border:1.5px solid #F59E0B;
+  border-radius:12px;padding:.75rem 1rem;margin-bottom:1rem;display:flex;align-items:center;gap:10px}
+.winner-icon{font-size:24px}
+.winner-text{font-size:13px;font-weight:700;color:#92400E}
+.winner-sub{font-size:11px;color:#B45309;margin-top:1px}
+/* EXPORT BTN */
+.btn-export{background:var(--bg2);border:1.5px solid var(--bd);border-radius:8px;
+  padding:.4rem .9rem;font-size:12px;font-weight:600;color:var(--tx2);cursor:pointer;
+  font-family:inherit;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-export:hover{border-color:var(--bl);color:var(--bl)}
+/* ANNONCE COMPOSE */
+.ann-compose{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:1rem;margin-bottom:1rem}
+.ann-textarea{width:100%;background:var(--bg3);border:1.5px solid var(--bd);border-radius:8px;
+  padding:.65rem .9rem;font-size:13px;color:var(--tx);outline:none;font-family:inherit;resize:vertical;min-height:80px}
+.ann-textarea:focus{border-color:var(--bl)}
+.btn-send-ann{background:linear-gradient(135deg,var(--bl),var(--pu));color:#fff;border:none;
+  border-radius:8px;padding:.5rem 1.1rem;font-size:13px;font-weight:700;cursor:pointer;margin-top:.5rem;font-family:inherit}
+/* CLASSEMENT */
+.rank-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem}
+.rank-item{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:.65rem 1rem;
+  display:flex;align-items:center;gap:10px;font-size:13px}
+.rank-pos{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+
+
+@media(max-width:768px){
+  .sb{display:none !important}
+  .sr{grid-template-columns:repeat(2,1fr)}
+  .mt{overflow-x:auto;flex-wrap:nowrap;padding-bottom:.25rem}
+  .tb{padding:.5rem .75rem}
+  .tblt{display:none}
+  table.dt{font-size:11px}
+  table.dt th,table.dt td{padding:.3rem .4rem}
+  .ci{width:52px;font-size:11px}
+  .vt{flex-wrap:wrap}
+  .mn{padding:.75rem}
+  .pt{font-size:15px}
+  .al{flex-direction:column}
+  .cbt{font-size:12px}
+}
+
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -312,6 +375,7 @@ table.dt tr:last-child td{border-bottom:none}
     <div style="font-weight:400;margin-top:2px">Mercredi 11h — rapport hebdomadaire !</div></div>
     <button onclick="document.getElementById('bw').classList.remove('show')">×</button>
   </div>
+  <div id="ann-zone" style="display:none"></div>
   <div class="al">
     <div class="sb" id="sb" style="display:none"></div>
     <div class="mn" id="mc"></div>
@@ -393,7 +457,9 @@ function loadFromFirebase(cb){
   tbls.forEach(function(n){
     proms.push(db.collection("tables").doc(tk(n)).get().then(function(doc){if(doc.exists&&doc.data().rows)localStorage.setItem(tk(n),JSON.stringify(doc.data().rows));}).catch(function(){}));
   });
-  Promise.all(proms).then(cb).catch(cb);
+  Promise.all(proms).then(function(){
+    loadAnns(function(){loadObjectifs(cb);});
+  }).catch(cb);
 }
 
 // ── WEEK SUMS ─────────────────────────────────────────
@@ -450,6 +516,7 @@ document.addEventListener("click",function(e){
 });
 function rerender(){
   if(!currentUser)return;
+  showAnnZone();
   var r=USERS[currentUser].role;
   if(r==="admin") renderAdmin(window._adTab||"recap");
   else if(r==="assistant") renderAssistant();
@@ -784,6 +851,15 @@ function renderMembre(uid){
     h+='<div class="sc am"><div class="sl">Aujourd\'hui</div><div class="sv am">'+(d["cmd_"+td]||0)+'</div></div>';
     h+='<div class="sc pu"><div class="sl">Livrees total</div><div class="sv pu">'+totalLivree(uid)+'</div></div></div>';
     h+=dataTable(uid,"membre");
+    // Objectif progress
+    var objs2=getObjectifs(), obj2=objs2[uid+mkey()]||0, cree2=totalCmds(uid), pct2=obj2>0?Math.min(Math.round(cree2/obj2*100),100):0;
+    if(obj2>0){
+      h+='<div class="obj-card" style="margin-top:1rem"><div class="obj-name">🎯 Objectif du mois : '+obj2+' commandes</div>';
+      h+='<div class="obj-bar-bg"><div class="obj-bar-fill" style="width:'+pct2+'%"></div></div>';
+      h+='<div class="obj-nums"><span>'+cree2+' / '+obj2+'</span><span class="obj-pct">'+pct2+'%</span></div></div>';
+    }
+    // Export
+    h+='<div style="margin-top:.75rem"><button class="btn-export" onclick="exportCSV(''+uid+'')">📤 Exporter mes donnees CSV</button></div>';
   } else {
     h+='<div id="chat-zone">'+renderChat(uid,uid)+'</div>';
   }
@@ -907,12 +983,20 @@ function renderAdmin(tab){
       tots[uid]={t:t,ws:ws,l:totalLivree(uid)};
       gt+=t; ws.forEach(function(v,i){wt[i]+=v;});
     });
+    // Winner of the week
+    var winner=getWinner();
+    if(winner){
+      h+='<div class="winner-banner"><div class="winner-icon">🏆</div><div>'
+        +'<div class="winner-text">Winner de la semaine — '+USERS[winner.uid].name+'</div>'
+        +'<div class="winner-sub">'+winner.score+' commandes cette semaine !</div></div></div>';
+    }
     h+='<div class="sr">';
     h+='<div class="sc bl"><div class="sl">Total equipe</div><div class="sv bl">'+gt+'</div></div>';
     getWeeks().forEach(function(w,wi){
       h+='<div class="sc '+(wi===curWk()?"gn":"bl")+'"><div class="sl">S'+(wi+1)+' ('+w[0]+'-'+w[1]+')</div><div class="sv '+(wi===curWk()?"gn":"bl")+'">'+wt[wi]+'</div></div>';
     });
     h+='</div>';
+    h+='<div class="chart-card"><div class="chart-title">Commandes par semaine — Equipe</div><canvas id="chart-recap" height="80"></canvas></div>';
     h+='<div class="rw"><table><thead><tr><th>Membre</th>';
     getWeeks().forEach(function(w,wi){h+='<th>S'+(wi+1)+'</th>';});
     h+='<th>Total</th><th>Livrees</th></tr></thead><tbody>';
@@ -928,6 +1012,29 @@ function renderAdmin(tab){
     h+='<td class="nm big">'+gt+'</td><td></td></tr>';
     h+='</tbody></table></div>';
     h+='<div class="dz" id="dz"></div>';
+    // Annonce composer
+    h+='<div class="ann-compose" style="margin-top:1rem">';
+    h+='<div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:.5rem">📢 Envoyer une annonce a l'equipe</div>';
+    h+='<textarea class="ann-textarea" id="ann-txt" placeholder="Ecris ton message..."></textarea>';
+    h+='<button class="btn-send-ann" onclick="sendAnnouncement(document.getElementById('ann-txt').value)">Envoyer a l'equipe</button></div>';
+    // Objectifs
+    var mks2=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin";});
+    var objs=getObjectifs();
+    h+='<div style="font-size:13px;font-weight:700;color:var(--tx);margin:.75rem 0 .5rem">🎯 Objectifs mensuels</div>';
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem">';
+    mks2.forEach(function(uid){
+      var obj=objs[uid+mkey()]||0, cree=totalCmds(uid), pct=obj>0?Math.min(Math.round(cree/obj*100),100):0;
+      h+='<div class="obj-card"><div class="obj-name">'+USERS[uid].name+'</div>';
+      h+='<div style="display:flex;align-items:center;gap:.5rem">';
+      h+='<input class="obj-input" type="number" min="0" value="'+obj+'" onchange="saveObjectif(''+uid+'',this.value);rerender()" placeholder="Obj.">';
+      h+='<div style="flex:1"><div class="obj-bar-bg"><div class="obj-bar-fill" style="width:'+pct+'%"></div></div>';
+      h+='<div class="obj-nums"><span>'+cree+' / '+(obj||'?')+'</span><span class="obj-pct">'+pct+'%</span></div></div>';
+      h+='</div></div>';
+    });
+    h+='</div>';
+    // Export button
+    h+='<div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">';
+    h+='<button class="btn-export" onclick="exportAllCSV()">📤 Export CSV equipe</button></div>';
 
   } else if(tab==="eval"){
     h+=renderEval();
@@ -974,6 +1081,23 @@ function renderAdmin(tab){
   h+='<div style="padding:.5rem 0;text-align:right"><span class="sv2" id="sv">✓ Sauvegarde</span></div>';
   document.getElementById("mc").innerHTML=h;
 
+  // Chart commandes par semaine
+  setTimeout(function(){
+    var canvas=document.getElementById("chart-recap");
+    if(!canvas||!window.Chart)return;
+    var mks3=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin";});
+    var w3=getWeeks(), labels=w3.map(function(x,i){return "S"+(i+1)+" ("+x[0]+"-"+x[1]+")";});
+    var colors=["#3B82F6","#22C55E","#F59E0B","#8B5CF6","#EF4444","#06B6D4","#D97706","#7C3AED","#059669"];
+    var datasets=mks3.map(function(uid,i){
+      var ws2=weekSums(uid);
+      return {label:USERS[uid].name.split(" ")[0],data:ws2,borderColor:colors[i%colors.length],
+        backgroundColor:colors[i%colors.length]+"22",tension:.4,fill:false,pointRadius:4};
+    });
+    new Chart(canvas,{type:"line",data:{labels:labels,datasets:datasets},
+      options:{responsive:true,plugins:{legend:{position:"bottom",labels:{font:{size:11},boxWidth:12}}},
+        scales:{y:{beginAtZero:true,grid:{color:"#F1F5F9"}},x:{grid:{color:"#F1F5F9"}}}}});
+  },100);
+
   window.adDetail=function(uid){
     var dz=document.getElementById("dz"); if(!dz)return;
     var d=getData(uid), c=totalCmds(uid), l=totalLivree(uid), p=c>0?Math.round(l/c*100):0;
@@ -1002,6 +1126,114 @@ function renderAdmin(tab){
   };
   if(tab==="msg")setTimeout(function(){var cm=document.getElementById("cms");if(cm)cm.scrollTop=cm.scrollHeight;},50);
 }
+
+// ── ANNOUNCEMENTS ─────────────────────────────────────
+function getAnns(){try{return JSON.parse(localStorage.getItem("tz_ann"))||[];}catch(e){return [];}}
+function setAnns(a){
+  localStorage.setItem("tz_ann",JSON.stringify(a));
+  db.collection("config").doc("announcements").set({list:a}).catch(function(){});
+}
+function loadAnns(cb){
+  db.collection("config").doc("announcements").get().then(function(doc){
+    if(doc.exists&&doc.data().list) localStorage.setItem("tz_ann",JSON.stringify(doc.data().list));
+    cb();
+  }).catch(cb);
+}
+function sendAnnouncement(text){
+  if(!text.trim())return;
+  var anns=getAnns(), now=new Date();
+  var t=String(now.getDate()).padStart(2,"0")+"/"+String(now.getMonth()+1).padStart(2,"0")+"/"+now.getFullYear()+" "+String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
+  anns.unshift({text:text.trim(),time:t,id:Date.now()});
+  if(anns.length>10)anns=anns.slice(0,10);
+  setAnns(anns);
+  showAnnZone();
+}
+function showAnnZone(){
+  var anns=getAnns(); if(!anns.length)return;
+  var latest=anns[0];
+  var z=document.getElementById("ann-zone"); if(!z)return;
+  z.style.display="block";
+  z.innerHTML='<div class="ann-card"><div class="ann-title">📢 Annonce de la RM</div>'
+    +'<div class="ann-text">'+latest.text+'</div>'
+    +'<div class="ann-time">'+latest.time+'</div>'
+    +'<button class="ann-close" onclick="document.getElementById('ann-zone').style.display='none'">×</button></div>';
+}
+
+// ── OBJECTIFS ─────────────────────────────────────────
+function getObjectifs(){try{return JSON.parse(localStorage.getItem("tz_obj"))||{};}catch(e){return {};}}
+function setObjectifs(o){
+  localStorage.setItem("tz_obj",JSON.stringify(o));
+  db.collection("config").doc("objectifs").set(o).catch(function(){});
+}
+function loadObjectifs(cb){
+  db.collection("config").doc("objectifs").get().then(function(doc){
+    if(doc.exists) localStorage.setItem("tz_obj",JSON.stringify(doc.data()));
+    cb();
+  }).catch(cb);
+}
+function saveObjectif(uid, val){
+  var o=getObjectifs(); o[uid+mkey()]=parseInt(val)||0; setObjectifs(o);
+}
+
+// ── EXPORT CSV ────────────────────────────────────────
+function exportCSV(uid){
+  var d=getData(uid), u=USERS[uid], w=getWeeks(), nd=days();
+  var rows=["Date,Jour,Nb Cmnd,Livree jour,Livree semaine"];
+  for(var day=1;day<=nd;day++){
+    var dt=new Date(curMonth.y,curMonth.m,day), dow=dt.getDay(), isSat=(dow===6);
+    var wi=w.findIndex(function(x){return day>=x[0]&&day<=x[1];});
+    var ws=0; for(var i=w[wi][0];i<=w[wi][1];i++)ws+=parseInt(d["cmd_"+i]||0);
+    var dd=String(day).padStart(2,"0")+"/"+String(curMonth.m+1).padStart(2,"0")+"/"+curMonth.y;
+    rows.push(dd+","+JOURS[dow]+","+(d["cmd_"+day]||0)+","+(d["lj_"+day]||0)+","+(isSat?ws:""));
+  }
+  var csv=rows.join("\n");
+  var blob=new Blob([csv],{type:"text/csv"});
+  var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="suivi_"+uid+"_"+monthLabel().replace(" ","_")+".csv"; a.click();
+}
+function exportAllCSV(){
+  var mks=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin";});
+  var nd=days(), w=getWeeks();
+  var rows=["Membre,Date,Jour,Nb Cmnd,Livree jour"];
+  mks.forEach(function(uid){
+    var d=getData(uid);
+    for(var day=1;day<=nd;day++){
+      var dt=new Date(curMonth.y,curMonth.m,day), dow=dt.getDay();
+      var dd=String(day).padStart(2,"0")+"/"+String(curMonth.m+1).padStart(2,"0")+"/"+curMonth.y;
+      rows.push(USERS[uid].name+","+dd+","+JOURS[dow]+","+(d["cmd_"+day]||0)+","+(d["lj_"+day]||0));
+    }
+  });
+  var csv=rows.join("\n");
+  var blob=new Blob([csv],{type:"text/csv"});
+  var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="recap_equipe_"+monthLabel().replace(" ","_")+".csv"; a.click();
+}
+
+// ── WINNER OF THE WEEK ────────────────────────────────
+function getWinner(){
+  var mks=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin"&&USERS[k].role!=="assistant";});
+  var wi=curWk(), w=getWeeks()[wi];
+  if(!w)return null;
+  var best=null, bestScore=0;
+  mks.forEach(function(uid){
+    var d=getData(uid), s=0;
+    for(var i=w[0];i<=w[1];i++)s+=parseInt(d["cmd_"+i]||0);
+    if(s>bestScore){bestScore=s;best={uid:uid,score:s};}
+  });
+  return best&&best.score>0?best:null;
+}
+
+// ── AUTO LOGOUT 30min ─────────────────────────────────
+var _lastActivity=Date.now();
+document.addEventListener("mousemove",function(){_lastActivity=Date.now();});
+document.addEventListener("keydown",function(){_lastActivity=Date.now();});
+setInterval(function(){
+  if(currentUser&&Date.now()-_lastActivity>30*60*1000){
+    showToast("Deconnexion automatique — inactivite de 30 min");
+    setTimeout(doLogout,2000);
+  }
+},60000);
+
 </script>
 </body>
 </html>
