@@ -7,141 +7,191 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Suivi Équipe — Team Zohra</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
 :root{
-  --bg:#F0F6FF;--bg2:#fff;--bg3:#E8F1FF;--border:#C5D9F5;
-  --text:#0D2140;--text2:#4A6FA5;--text3:#8AAFD4;
-  --blue:#2563EB;--blue2:#1D4ED8;--bluel:#DBEAFE;
-  --green:#16A34A;--red:#DC2626;--amber:#D97706;--lilac:#7C3AED;
-  --dark:#0D2140;
+  --bg:#F7F9FC;--bg2:#fff;--bg3:#F8FAFC;--border:#E2E8F0;
+  --text:#0F172A;--text2:#64748B;--text3:#94A3B8;
+  --blue:#3B82F6;--blue2:#1D4ED8;--bluel:#DBEAFE;--bluell:#EFF6FF;
+  --green:#22C55E;--red:#EF4444;--amber:#F59E0B;--purple:#8B5CF6;
+  --dark:#0F172A;--dark2:#1E293B;--dark3:#334155;
 }
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-/* LOGIN */
-#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;
-  background:linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 50%,#EDE9FE 100%)}
-.login-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:24px;padding:2.5rem;
-  width:100%;max-width:400px;box-shadow:0 8px 32px rgba(37,99,235,.12)}
-.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:2rem}
-.login-logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--blue),var(--lilac));
-  border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.login-logo-text{font-size:15px;font-weight:700;color:var(--text)}
-.login-logo-sub{font-size:11px;color:var(--text2)}
-h1.login-title{font-size:24px;font-weight:700;margin-bottom:.3rem}
-.login-subtitle{font-size:13px;color:var(--text2);margin-bottom:2rem}
+/* ── LOGIN ── */
+#login-screen{display:flex;flex-direction:column;min-height:100vh;
+  background:linear-gradient(135deg,#EFF6FF 0%,#F0F9FF 50%,#EDE9FE 100%)}
+.login-topbar{background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:.65rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.login-logo-area{display:flex;align-items:center;gap:10px}
+.login-logo-icon{width:34px;height:34px;background:var(--blue);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:17px}
+.login-logo-text{font-size:14px;font-weight:700;color:var(--text)}
+.login-logo-sub{font-size:11px;color:var(--text3)}
+.login-clock-zone{text-align:right}
+.login-clock-time{font-size:20px;font-weight:700;color:var(--blue2);font-family:monospace;letter-spacing:.05em}
+.login-clock-date{font-size:11px;color:var(--text2);margin-top:1px}
+.login-body{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
+.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;
+  padding:2.2rem;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(37,99,235,.08)}
+.login-card-header{display:flex;align-items:center;gap:12px;margin-bottom:1.75rem;
+  padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+.login-card-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--blue),var(--purple));
+  border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.login-card-title{font-size:16px;font-weight:700;color:var(--text)}
+.login-card-desc{font-size:11px;color:var(--text3);margin-top:2px}
 .field{margin-bottom:1rem}
-.field label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em}
+.field label{display:block;font-size:10px;font-weight:700;color:var(--text2);
+  text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem}
 .field select,.field input{width:100%;background:var(--bg3);border:1.5px solid var(--border);
-  border-radius:10px;padding:.65rem 1rem;color:var(--text);font-size:14px;outline:none;transition:border-color .2s}
+  border-radius:10px;padding:.6rem .9rem;color:var(--text);font-size:13px;outline:none;transition:border-color .2s}
 .field select:focus,.field input:focus{border-color:var(--blue)}
-.field select option{background:#fff}
-.btn-login{width:100%;background:linear-gradient(135deg,var(--blue),var(--lilac));color:#fff;border:none;
-  border-radius:10px;padding:.8rem;font-size:14px;font-weight:700;cursor:pointer;margin-top:.5rem;
-  letter-spacing:.03em;transition:opacity .2s}
+.field select option{background:var(--bg2)}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;
+  border:none;border-radius:10px;padding:.75rem;font-size:14px;font-weight:700;cursor:pointer;
+  margin-top:.5rem;letter-spacing:.02em;transition:opacity .2s}
 .btn-login:hover{opacity:.9}
-.login-error{background:#FEE2E2;border:1px solid #FECACA;border-radius:8px;padding:.6rem 1rem;
-  font-size:13px;color:var(--red);margin-top:.75rem;display:none}
+.login-footer{text-align:center;padding:.75rem;font-size:11px;color:#CBD5E1}
+.login-error{background:#FEE2E2;border:1px solid #FECACA;border-radius:8px;padding:.55rem .9rem;
+  font-size:12px;color:var(--red);margin-top:.75rem;display:none}
 
-/* APP */
+/* ── APP SHELL ── */
 #app{display:none;min-height:100vh;flex-direction:column}
-.topbar{background:var(--bg2);border-bottom:1.5px solid var(--border);padding:.75rem 1.5rem;
-  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;
-  box-shadow:0 2px 12px rgba(37,99,235,.08)}
-.topbar-left{display:flex;align-items:center;gap:12px}
-.topbar-logo{width:30px;height:30px;background:linear-gradient(135deg,var(--blue),var(--lilac));
-  border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
-.topbar-title{font-size:14px;font-weight:700;color:var(--text)}
-.topbar-badge{font-size:11px;background:var(--bg3);border:1px solid var(--border);
-  border-radius:20px;padding:2px 10px;color:var(--text2)}
-.user-pill{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1.5px solid var(--border);
-  border-radius:20px;padding:4px 12px 4px 6px}
-.user-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--lilac));
-  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
-.user-name{font-size:12px;font-weight:600}
-.btn-logout{background:none;border:1.5px solid var(--border);border-radius:8px;padding:4px 12px;
-  color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s}
+.topbar{background:var(--dark);padding:.6rem 1.2rem;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.topbar-logo{width:28px;height:28px;background:var(--blue);border-radius:7px;
+  display:flex;align-items:center;justify-content:center;font-size:14px}
+.topbar-title{color:#fff;font-size:13px;font-weight:700}
+.topbar-badge{background:#1E3A5F;color:#60A5FA;font-size:11px;padding:3px 10px;
+  border-radius:20px;border:1px solid #2563EB33;cursor:pointer}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.topbar-clock{color:#60A5FA;font-size:12px;font-family:monospace}
+.topbar-sep{width:1px;height:14px;background:var(--dark3)}
+.user-pill{display:flex;align-items:center;gap:6px}
+.user-avatar{width:24px;height:24px;border-radius:50%;background:var(--blue);
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.user-name{color:#94A3B8;font-size:12px}
+.btn-logout{background:none;border:1px solid var(--dark3);border-radius:6px;padding:3px 10px;
+  color:#64748B;font-size:11px;cursor:pointer;transition:all .2s}
 .btn-logout:hover{border-color:var(--red);color:var(--red)}
-.main{flex:1;padding:1.5rem;max-width:1300px;margin:0 auto;width:100%}
 
-/* TABS */
-.view-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;border-bottom:1.5px solid var(--border);
-  padding-bottom:.75rem;flex-wrap:wrap}
-.vtab{padding:.45rem 1.1rem;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;
-  border:1.5px solid var(--border);color:var(--text2);background:none;font-family:inherit;transition:all .2s}
-.vtab.active{background:linear-gradient(135deg,var(--blue),var(--lilac));border-color:transparent;color:#fff}
-.vtab .bdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);
+/* ── CLOCK BAR ── */
+.clock-bar{background:var(--dark2);padding:.32rem 1.2rem;display:flex;align-items:center;justify-content:space-between}
+.clock-time{color:#60A5FA;font-size:14px;font-weight:700;font-family:monospace;letter-spacing:.06em}
+.clock-date{color:#64748B;font-size:11px}
+.clock-status{font-size:10px;color:var(--green);display:flex;align-items:center;gap:4px}
+.clock-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);display:block}
+
+/* ── MONTH PICKER ── */
+#month-picker{display:none;position:absolute;top:46px;left:0;background:var(--bg2);
+  border:1px solid var(--border);border-radius:12px;padding:1rem;z-index:200;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);min-width:250px}
+#month-picker select{background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:.4rem .6rem;color:var(--text);font-size:13px;outline:none}
+#month-picker button{width:100%;background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;border:none;border-radius:8px;padding:.5rem;font-size:13px;font-weight:700;cursor:pointer;margin-top:.75rem}
+
+/* ── REMINDER BANNERS ── */
+.reminder-banner{display:none;padding:.65rem 1.2rem;font-size:12px;font-weight:600;
+  align-items:center;gap:10px}
+.reminder-banner.daily{background:#FEF3C7;color:#92400E;border-bottom:2px solid #FDE68A}
+.reminder-banner.weekly{background:#DBEAFE;color:#1E40AF;border-bottom:2px solid #93C5FD}
+.reminder-banner.show{display:flex}
+.rem-icon{font-size:18px}
+.rem-close{margin-left:auto;cursor:pointer;background:none;border:none;color:inherit;font-size:16px;font-weight:700;opacity:.6}
+
+/* ── SIDEBAR ── */
+.app-layout{display:flex;flex:1;min-height:calc(100vh - 85px)}
+.sidebar{width:200px;background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-section{padding:.6rem .75rem;font-size:10px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.08em;margin-top:.5rem}
+.sitem{display:flex;align-items:center;gap:8px;padding:.48rem .75rem;margin:1px .4rem;
+  border-radius:8px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s}
+.sitem.active{background:var(--bluel);color:var(--blue2)}
+.sitem:hover{background:var(--bg3)}
+.sitem .sico{font-size:15px;width:20px;text-align:center}
+.sitem .bdot{width:6px;height:6px;border-radius:50%;background:var(--red);margin-left:auto;display:none}
+.sitem .bdot.show{display:block}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;padding:1.25rem;overflow:auto}
+.page-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:3px}
+.page-sub{font-size:12px;color:var(--text2);margin-bottom:1.25rem}
+
+/* ── VIEW TABS (for members without sidebar) ── */
+.view-tabs{display:flex;gap:.4rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.vtab{padding:.38rem .9rem;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;
+  border:1px solid var(--border);color:var(--text2);background:none;font-family:inherit;transition:all .2s}
+.vtab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.vtab .bdot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);
   margin-left:5px;vertical-align:middle}
 
-/* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:1.5rem}
-.stat-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:1rem;
-  box-shadow:0 2px 8px rgba(37,99,235,.06)}
-.stat-label{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;
-  letter-spacing:.06em;margin-bottom:.4rem}
-.stat-val{font-size:24px;font-weight:700}
-.stat-val.blue{color:var(--blue)}.stat-val.green{color:var(--green)}
-.stat-val.amber{color:var(--amber)}.stat-val.lilac{color:var(--lilac)}
-
-/* MEMBER TABS */
-.member-tabs{display:flex;gap:.4rem;margin-bottom:1.25rem;flex-wrap:wrap}
-.mtab{padding:.35rem .85rem;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;
-  border:1.5px solid var(--border);color:var(--text2);background:none;font-family:inherit;transition:all .2s}
+/* ── MEMBER TABS ── */
+.member-tabs{display:flex;gap:.4rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.mtab{padding:.32rem .8rem;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;
+  border:1px solid var(--border);color:var(--text2);background:none;font-family:inherit;transition:all .2s}
 .mtab.active{background:var(--blue);border-color:var(--blue);color:#fff}
 
-/* TABLE */
-.table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow-x:auto;
-  box-shadow:0 2px 8px rgba(37,99,235,.06)}
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:.85rem 1rem;border-left:3px solid transparent}
+.stat-card.blue{border-left-color:var(--blue)}
+.stat-card.green{border-left-color:var(--green)}
+.stat-card.amber{border-left-color:var(--amber)}
+.stat-card.purple{border-left-color:var(--purple)}
+.stat-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:.3rem}
+.stat-val{font-size:22px;font-weight:700}
+.stat-val.blue{color:var(--blue)}.stat-val.green{color:var(--green)}
+.stat-val.amber{color:var(--amber)}.stat-val.purple{color:var(--purple)}
+
+/* ── TABLE ── */
+.table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow-x:auto}
 table.dt{width:100%;border-collapse:collapse;min-width:600px}
-table.dt th{padding:.6rem .8rem;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;
-  letter-spacing:.06em;text-align:center;border-bottom:1.5px solid var(--border);white-space:nowrap;
-  background:var(--bg3)}
+table.dt th{padding:.55rem .8rem;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;
+  letter-spacing:.06em;text-align:center;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--bg3)}
 table.dt th:first-child{text-align:left}
-table.dt td{padding:.45rem .8rem;font-size:12px;text-align:center;border-bottom:1px solid var(--border)}
-table.dt td:first-child{text-align:left;font-size:11px;color:var(--text2)}
+table.dt td{padding:.42rem .8rem;font-size:12px;text-align:center;border-bottom:1px solid var(--border)}
+table.dt td:first-child{text-align:left;font-size:11px;color:var(--text2);font-family:monospace}
 table.dt td:nth-child(2){font-weight:600}
-table.dt tr.we td{background:#F0F7FF}
+table.dt tr.we td{background:#FAFBFF}
 table.dt tr.tod td{background:#F0FFF4}
 table.dt tr:last-child td{border-bottom:none}
-.ci{background:var(--bg3);border:1.5px solid var(--border);border-radius:7px;width:68px;
-  padding:.25rem .4rem;color:var(--text);font-size:12px;font-weight:600;text-align:center;outline:none}
+.ci{background:var(--bg3);border:1.5px solid var(--border);border-radius:6px;width:64px;
+  padding:.22rem .4rem;color:var(--text);font-size:12px;font-weight:600;text-align:center;outline:none}
 .ci:focus{border-color:var(--blue)}
 .ci:disabled{opacity:.3;cursor:default;background:transparent;border-color:transparent}
-.ci.gr{color:var(--green)}.ci.am{color:var(--amber)}.ci.bl{color:var(--blue)}.ci.li{color:var(--lilac)}
-.ti{background:transparent;border:none;width:100%;min-width:100px;color:var(--text2);
-  font-size:12px;outline:none;font-family:inherit}
+.ci.gr{color:var(--green)}.ci.am{color:var(--amber)}.ci.bl{color:var(--blue)}.ci.li{color:var(--purple)}
+.ti{background:transparent;border:none;width:100%;min-width:90px;color:var(--text2);font-size:12px;outline:none;font-family:inherit}
 .ti:disabled{opacity:.3}
 .sat-tot{font-size:13px;font-weight:700;color:var(--green)}
 
-/* RECAP TABLE */
-.recap-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow-x:auto;
-  box-shadow:0 2px 8px rgba(37,99,235,.06)}
+/* ── RECAP TABLE ── */
+.recap-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow-x:auto}
 .recap-wrap table{width:100%;border-collapse:collapse;min-width:700px}
-.recap-wrap th{padding:.6rem 1rem;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;
-  letter-spacing:.06em;text-align:center;border-bottom:1.5px solid var(--border);white-space:nowrap;
-  background:var(--bg3)}
+.recap-wrap th{padding:.55rem 1rem;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;
+  letter-spacing:.06em;text-align:center;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--bg3)}
 .recap-wrap th:first-child{text-align:left}
-.recap-wrap td{padding:.55rem 1rem;font-size:13px;text-align:center;border-bottom:1px solid var(--border)}
+.recap-wrap td{padding:.5rem 1rem;font-size:13px;text-align:center;border-bottom:1px solid var(--border)}
 .recap-wrap td:first-child{text-align:left;font-weight:600}
-.recap-wrap tr.tot td{background:var(--bg3);font-weight:700;color:var(--blue);border-top:1.5px solid var(--border)}
+.recap-wrap tr.tot td{background:var(--bluel);font-weight:700;color:var(--blue2);border-top:1px solid var(--border)}
+.recap-wrap tr:hover td{background:var(--bg3)}
 .num{font-weight:600}.num.big{font-size:15px;font-weight:700;color:var(--blue)}
 
-/* EVALUATION */
-.eval-section{margin-top:1rem}
-.eval-title{font-size:15px;font-weight:700;margin-bottom:1rem;color:var(--text)}
-.eval-compare-table{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;
-  overflow:hidden;box-shadow:0 2px 8px rgba(37,99,235,.06)}
+/* ── EVAL ── */
+.eval-compare-table{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .eval-compare-table table{width:100%;border-collapse:collapse}
-.eval-compare-table th{padding:.65rem 1rem;font-size:10px;font-weight:700;color:var(--text2);
-  text-transform:uppercase;letter-spacing:.06em;text-align:center;border-bottom:1.5px solid var(--border);
-  white-space:nowrap;background:var(--bg3)}
+.eval-compare-table th{padding:.55rem 1rem;font-size:10px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.06em;text-align:center;border-bottom:1px solid var(--border);background:var(--bg3)}
 .eval-compare-table th:first-child{text-align:left}
-.eval-compare-table td{padding:.6rem 1rem;font-size:13px;text-align:center;
-  border-bottom:1px solid var(--border)}
+.eval-compare-table td{padding:.55rem 1rem;font-size:13px;text-align:center;border-bottom:1px solid var(--border)}
 .eval-compare-table td:first-child{text-align:left;font-weight:600}
 .eval-compare-table tr:last-child td{border-bottom:none}
 .eval-compare-table tr:hover td{background:var(--bg3)}
 .bar-cell{width:180px}
-.bar-wrap{background:var(--bg3);border-radius:20px;height:10px;overflow:hidden;margin:0 auto}
+.bar-wrap{background:var(--bg3);border-radius:20px;height:8px;overflow:hidden;margin:0 auto}
 .bar-fill{height:100%;border-radius:20px;transition:width .6s}
 .bar-fill.high{background:linear-gradient(90deg,#16A34A,#4ADE80)}
 .bar-fill.mid{background:linear-gradient(90deg,#D97706,#FCD34D)}
@@ -153,55 +203,59 @@ table.dt tr:last-child td{border-bottom:none}
 .rank-3{background:#FED7AA;color:#92400E}
 .rank-n{background:var(--bg3);color:var(--text2)}
 .pct-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
-.pct-high{background:#DCFCE7;color:#16A34A}
-.pct-mid{background:#FEF3C7;color:#D97706}
+.pct-high{background:#DCFCE7;color:#15803D}
+.pct-mid{background:#FEF3C7;color:#B45309}
 .pct-low{background:#FEE2E2;color:#DC2626}
-.eval-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.5rem}
-.eval-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:1rem;
-  box-shadow:0 2px 8px rgba(37,99,235,.06)}
+.eval-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin-top:1.25rem}
+.eval-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:.9rem}
 .eval-card-name{font-size:12px;font-weight:700;margin-bottom:.5rem;color:var(--text)}
-.eval-card-bar{background:var(--bg3);border-radius:20px;height:8px;overflow:hidden;margin-bottom:.4rem}
+.eval-card-bar{background:var(--bg3);border-radius:20px;height:6px;overflow:hidden;margin-bottom:.4rem}
 .eval-card-fill{height:100%;border-radius:20px}
 .eval-card-stats{display:flex;justify-content:space-between;font-size:11px;color:var(--text2)}
-.eval-score{font-size:20px;font-weight:700;margin-top:.3rem}
+.eval-score{font-size:18px;font-weight:700;margin-top:.3rem}
 
-/* MESSAGERIE */
-.chat-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;
-  box-shadow:0 2px 8px rgba(37,99,235,.06)}
-.chat-header{background:var(--bg3);padding:.75rem 1rem;border-bottom:1.5px solid var(--border);
-  font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
-.chat-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
-.chat-msgs{padding:1rem;min-height:250px;max-height:350px;overflow-y:auto;
-  display:flex;flex-direction:column;gap:.6rem}
-.msg{max-width:75%;padding:.6rem .9rem;border-radius:14px;font-size:13px;line-height:1.5}
-.msg.sent{background:linear-gradient(135deg,var(--blue),var(--lilac));color:#fff;
-  align-self:flex-end;border-bottom-right-radius:4px}
+/* ── GENERIC TABLE ── */
+.table-wrap .gen-add-btn{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;
+  border:none;border-radius:8px;padding:.4rem 1rem;font-size:12px;font-weight:600;cursor:pointer;margin-top:.6rem}
+
+/* ── CHAT ── */
+.chat-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.chat-header{background:var(--bg3);padding:.65rem 1rem;border-bottom:1px solid var(--border);
+  font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;color:var(--text)}
+.chat-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.chat-msgs{padding:1rem;min-height:220px;max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:.55rem}
+.msg{max-width:72%;padding:.55rem .8rem;border-radius:12px;font-size:13px;line-height:1.5}
+.msg.sent{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;
+  align-self:flex-end;border-bottom-right-radius:3px}
 .msg.recv{background:var(--bg3);color:var(--text);align-self:flex-start;
-  border-bottom-left-radius:4px;border:1px solid var(--border)}
-.msg-meta{font-size:10px;opacity:.7;margin-top:2px}
-.chat-inp-row{display:flex;gap:.5rem;padding:.75rem 1rem;border-top:1.5px solid var(--border);background:var(--bg3)}
-.chat-inp{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:20px;
-  padding:.5rem 1rem;font-size:13px;outline:none;font-family:inherit;color:var(--text)}
+  border-bottom-left-radius:3px;border:1px solid var(--border)}
+.msg-meta{font-size:10px;opacity:.65;margin-top:2px}
+.chat-inp-row{display:flex;gap:.5rem;padding:.65rem 1rem;border-top:1px solid var(--border);background:var(--bg3)}
+.chat-inp{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:20px;
+  padding:.45rem .9rem;font-size:13px;outline:none;font-family:inherit;color:var(--text)}
 .chat-inp:focus{border-color:var(--blue)}
-.btn-send{background:linear-gradient(135deg,var(--blue),var(--lilac));color:#fff;border:none;
-  border-radius:20px;padding:.5rem 1.1rem;font-size:13px;font-weight:700;cursor:pointer}
+.btn-send{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border:none;
+  border-radius:20px;padding:.45rem 1rem;font-size:12px;font-weight:700;cursor:pointer}
 .no-msg{color:var(--text3);font-size:13px;text-align:center;padding:2rem}
-.msg-sidebar{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden}
-.msg-sidebar-item{padding:.65rem 1rem;cursor:pointer;font-size:13px;font-weight:600;
-  border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;
-  transition:background .15s}
+.msg-sidebar{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.msg-sidebar-item{padding:.6rem 1rem;cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;transition:background .15s}
 .msg-sidebar-item:last-child{border-bottom:none}
 .msg-sidebar-item:hover{background:var(--bg3)}
-.msg-sidebar-item.active{background:var(--bluel);color:var(--blue)}
+.msg-sidebar-item.active{background:var(--bluel);color:var(--blue2)}
 
-.page-title{font-size:22px;font-weight:700;margin-bottom:3px}
-.page-sub{font-size:13px;color:var(--text2);margin-bottom:1.25rem}
+/* ── READONLY BANNER ── */
+.readonly-banner{background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:.5rem 1rem;
+  font-size:12px;font-weight:600;color:#92400E;margin-bottom:.75rem;display:flex;align-items:center;gap:6px}
+
+/* ── MISC ── */
 .saved-ok{font-size:12px;color:var(--green);opacity:0;transition:opacity .3s}
 .saved-ok.show{opacity:1}
 .detail-zone{margin-top:1rem}
-.detail-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1rem}
-.bubble-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:.3rem}
-.bub{border-radius:8px;padding:.4rem;text-align:center;background:var(--bg3);border:1px solid var(--border)}
+.detail-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.detail-title{font-size:14px;font-weight:700;margin-bottom:1rem;color:var(--text)}
+.bubble-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:.3rem}
+.bub{border-radius:8px;padding:.35rem;text-align:center;background:var(--bg3);border:1px solid var(--border)}
 .bub .bd{font-size:9px;color:var(--text3)}
 .bub .bv{font-size:13px;font-weight:700;color:var(--text3)}
 .bub .bv.has{color:var(--blue)}
@@ -305,16 +359,28 @@ table.dt tr:last-child td{border-bottom:none}
 <body>
 
 <div id="login-screen">
-  <div class="login-card">
-    <div class="login-logo">
+  <div class="login-topbar">
+    <div class="login-logo-area">
       <div class="login-logo-icon">💙</div>
       <div>
         <div class="login-logo-text">Team Zohra</div>
-        <div class="login-logo-sub">Suivi Équipe · Juin 2026</div>
+        <div class="login-logo-sub">Suivi Équipe</div>
       </div>
     </div>
-    <h1 class="login-title">Bienvenue 👋</h1>
-    <p class="login-subtitle">Sélectionne ton profil et entre ton code d'accès</p>
+    <div class="login-clock-zone">
+      <div class="login-clock-time" id="login-clock">--:--:--</div>
+      <div class="login-clock-date" id="login-date">---</div>
+    </div>
+  </div>
+  <div class="login-body">
+  <div class="login-card">
+    <div class="login-card-header">
+      <div class="login-card-icon">👋</div>
+      <div>
+        <div class="login-card-title">Bienvenue !</div>
+        <div class="login-card-desc">Sélectionne ton profil et entre ton code d'accès</div>
+      </div>
+    </div>
     <div class="field">
       <label>Profil</label>
       <select id="sel-user">
@@ -338,6 +404,8 @@ table.dt tr:last-child td{border-bottom:none}
     <button class="btn-login" onclick="doLogin()">Accéder →</button>
     <div class="login-error" id="login-err">Code incorrect.</div>
   </div>
+  </div>
+  <div class="login-footer">Team Zohra · Système de suivi interne</div>
 </div>
 
 <div id="app" style="display:none;flex-direction:column">
@@ -362,7 +430,36 @@ table.dt tr:last-child td{border-bottom:none}
       <button class="btn-logout" onclick="doLogout()">Déconnexion</button>
     </div>
   </div>
-  <div class="main" id="main-content"></div>
+  
+  <!-- CLOCK & REMINDERS -->
+  <div class="clock-bar">
+    <div>
+      <div class="clock-time" id="clock-time">--:--:--</div>
+      <div class="clock-date" id="clock-date">---</div>
+    </div>
+    <div style="font-size:12px;opacity:.8">Team Zohra · Suivi Équipe</div>
+  </div>
+  <div class="reminder-banner daily" id="banner-daily">
+    <span class="rem-icon">📋</span>
+    <div>
+      <div style="font-size:14px">Rappel — Rapport Quotidien</div>
+      <div style="font-weight:400;margin-top:2px">Il est 14h30 — pensez à remplir votre rapport quotidien !</div>
+    </div>
+    <button class="rem-close" onclick="closeBanner('daily')">×</button>
+  </div>
+  <div class="reminder-banner weekly" id="banner-weekly">
+    <span class="rem-icon">📊</span>
+    <div>
+      <div style="font-size:14px">Rappel — Rapport Hebdomadaire</div>
+      <div style="font-weight:400;margin-top:2px">C'est mercredi 11h — pensez à remplir le rapport hebdomadaire !</div>
+    </div>
+    <button class="rem-close" onclick="closeBanner('weekly')">×</button>
+  </div>
+
+  <div class="app-layout">
+    <div class="sidebar" id="app-sidebar" style="display:none"></div>
+    <div class="main" id="main-content"></div>
+  </div>
 </div>
 
 <script>
@@ -470,6 +567,65 @@ function doLogout(){
   document.getElementById("sel-user").value="";
   document.getElementById("inp-pass").value="";
 }
+
+// ── SIDEBAR ───────────────────────────────────────────
+function renderSidebar(role, activeTab){
+  var sb = document.getElementById("app-sidebar");
+  if(!sb) return;
+  var items = [];
+  if(role==="admin"){
+    items=[
+      {t:"recap",  ico:"📊", lbl:"Recap"},
+      {t:"eval",   ico:"🏆", lbl:"Évaluation"},
+      {t:"perf",   ico:"✅", lbl:"Créatives +"},
+      {t:"nperf",  ico:"❌", lbl:"Créatives -"},
+      {t:"strat",  ico:"🎯", lbl:"Stratégie Créa"},
+      {t:"perfads",ico:"📈", lbl:"Perf Ads"},
+      {t:"msg",    ico:"💬", lbl:"Messages", dot:true},
+    ];
+    sb.style.display="flex";
+  } else if(role==="assistant"){
+    items=[
+      {t:"data",   ico:"📝", lbl:"Saisie"},
+      {t:"eval",   ico:"🏆", lbl:"Évaluation"},
+      {t:"perf",   ico:"✅", lbl:"Créatives +"},
+      {t:"nperf",  ico:"❌", lbl:"Créatives -"},
+      {t:"perfads",ico:"📈", lbl:"Perf Ads"},
+    ];
+    sb.style.display="flex";
+  } else if(role==="superviseur"){
+    items=[
+      {t:"remarques",ico:"📝", lbl:"Remarques"},
+      {t:"strat",    ico:"🎯", lbl:"Stratégie Créa"},
+    ];
+    sb.style.display="flex";
+  } else {
+    sb.style.display="none";
+    return;
+  }
+  var html='<div class="sidebar-section">Navigation</div>';
+  items.forEach(function(it){
+    var unread=it.dot&&totalUnreadMsgs()>0;
+    html+='<div class="sitem'+(it.t===activeTab?" active":"")+'" onclick="sidebarNav(''+it.t+'')">';
+    html+='<span class="sico">'+it.ico+'</span>'+it.lbl;
+    if(it.dot) html+='<span class="bdot'+(unread?" show":"")+'" id="sidebar-msg-dot"></span>';
+    html+='</div>';
+  });
+  sb.innerHTML=html;
+}
+
+function totalUnreadMsgs(){
+  var memberKeys=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin";});
+  return memberKeys.filter(function(uid){return getMsgs(uid).some(function(m){return m.to==="admin"&&!m.read;});}).length;
+}
+
+window.sidebarNav=function(tab){
+  var role=USERS[currentUser].role;
+  if(role==="admin") renderAdmin(tab);
+  else if(role==="assistant"){ window._atab=tab; renderAssistant(); }
+  else if(role==="superviseur"){ window._stab=tab; renderSup(); }
+};
+
 function showSaved(){var m=document.getElementById("saved-msg");if(m){m.classList.add("show");setTimeout(function(){m.classList.remove("show");},2000);}}
 
 window.saveField=function(el){
@@ -618,6 +774,7 @@ function renderMembre(uid){
     html+='<div id="chat-zone">'+renderChat(uid,uid)+'</div>';
   }
   html+='<div style="padding:.5rem 0;text-align:right"><span class="saved-ok" id="saved-msg">✓ Sauvegardé</span></div>';
+  var sb=document.getElementById("app-sidebar"); if(sb) sb.style.display="none";
   document.getElementById("main-content").innerHTML=html;
   window.switchMemTab=function(tab){window._memTab=tab;renderMembre(uid);};
   if(curTab==="msg")setTimeout(function(){var cm=document.getElementById("chat-msgs");if(cm)cm.scrollTop=cm.scrollHeight;},50);
@@ -656,6 +813,7 @@ function renderAssistant(){
   }
   html+='<div style="padding:.5rem 0;text-align:right"><span class="saved-ok" id="saved-msg">✓ Sauvegardé</span></div>';
   document.getElementById("main-content").innerHTML=html;
+  renderSidebar("assistant", curTab);
   window.asel=function(uid){window._asel=uid;renderAssistant();};
   window.aTab=function(t){window._atab=t;renderAssistant();};
 }
@@ -683,6 +841,7 @@ function renderAdmin(tab){
   var memberKeys=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin";});
   var curTab=tab||window._adTab||"recap";
   window._adTab=curTab;
+  renderSidebar("admin", curTab);
   var totalUnread=memberKeys.filter(function(uid){return getMsgs(uid).some(function(m){return m.to==="admin"&&!m.read;});}).length;
 
   var html='<div class="page-title">Dashboard RM 💙</div>';
@@ -775,484 +934,60 @@ function renderAdmin(tab){
   };
 }
 </script>
-
-</head>
-<body>
-
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-logo">
-      <div class="login-logo-icon">💙</div>
-      <div>
-        <div class="login-logo-text">Team Zohra</div>
-        <div class="login-logo-sub">Suivi Équipe · Juin 2026</div>
-      </div>
-    </div>
-    <h1 class="login-title">Bienvenue 👋</h1>
-    <p class="login-subtitle">Sélectionne ton profil et entre ton code d'accès</p>
-    <div class="field">
-      <label>Profil</label>
-      <select id="sel-user">
-        <option value="">— Choisir —</option>
-        <option value="admin">👑 RM — Latreche Zohra</option>
-        <option value="amb">Assistant Media Buyer</option>
-        <option value="sc">Superviseur Créatif</option>
-        <option value="cm">Community Manager</option>
-        <option value="dw">Développeur Web</option>
-        <option value="rrp">Responsable Recherche Produits</option>
-        <option value="mv1">Monteur Vidéo #1 — Medjahed Asmaa</option>
-        <option value="mv2">Monteur Vidéo #2 — Medjdoubi Amina</option>
-        <option value="mv3">Monteur Vidéo #3 — Aouabdi Nadia</option>
-        <option value="mv4">Monteur Vidéo #4 — Sedikki Kawter</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Code d'accès</label>
-      <input type="password" id="inp-pass" placeholder="••••••" autocomplete="off">
-    </div>
-    <button class="btn-login" onclick="doLogin()">Accéder →</button>
-    <div class="login-error" id="login-err">Code incorrect.</div>
-  </div>
-</div>
-
-<div id="app" style="display:none;flex-direction:column">
-  <div class="topbar">
-    <div class="topbar-left" style="position:relative">
-      <div class="topbar-logo">💙</div>
-      <div class="topbar-title">Suivi Équipe</div>
-      <div id="month-badge" class="topbar-badge" style="cursor:pointer" onclick="toggleMonthPicker()">📅 <span id="month-label">Juin 2026</span> ▾</div>
-      <div id="month-picker" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:1rem;z-index:200;box-shadow:0 8px 32px rgba(37,99,235,.15);min-width:260px">
-        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.75rem">
-          <select id="sel-month" style="flex:1;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:.4rem .6rem;color:var(--text);font-size:13px;outline:none"></select>
-          <select id="sel-year" style="width:90px;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:.4rem .6rem;color:var(--text);font-size:13px;outline:none"></select>
-        </div>
-        <button onclick="applyMonth()" style="width:100%;background:linear-gradient(135deg,var(--blue),var(--lilac));color:#fff;border:none;border-radius:8px;padding:.5rem;font-size:13px;font-weight:700;cursor:pointer">Confirmer</button>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <div class="user-pill">
-        <div class="user-avatar" id="top-avatar"></div>
-        <span class="user-name" id="top-name"></span>
-      </div>
-      <button class="btn-logout" onclick="doLogout()">Déconnexion</button>
-    </div>
-  </div>
-  <div class="main" id="main-content"></div>
-</div>
 
 <script>
-// ── MOIS ACTIF ────────────────────────────────────────
-var MONTHS_FR=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-var _today = new Date();
-var currentMonth = { m: _today.getMonth(), y: _today.getFullYear() };
+// ── HORLOGE ───────────────────────────────────────────
+var _dailyShown = false, _weeklyShown = false;
 
-function monthKey(){ return currentMonth.y+"_"+(currentMonth.m+1); }
-function daysInMonth(m,y){ return new Date(y,m+1,0).getDate(); }
-function isCurrentMonth(){ var n=new Date(); return currentMonth.m===n.getMonth()&&currentMonth.y===n.getFullYear(); }
-function isPastMonth(){ var n=new Date(); return currentMonth.y<n.getFullYear()||(currentMonth.y===n.getFullYear()&&currentMonth.m<n.getMonth()); }
-function isReadOnly(){ return isPastMonth(); }
-function monthLabel(){ return MONTHS_FR[currentMonth.m]+" "+currentMonth.y; }
+function updateClock(){
+  var now = new Date();
+  var h = String(now.getHours()).padStart(2,"0");
+  var m = String(now.getMinutes()).padStart(2,"0");
+  var s = String(now.getSeconds()).padStart(2,"0");
+  var el = document.getElementById("clock-time");
+  if(el) el.textContent = h+":"+m+":"+s;
+  var lc = document.getElementById("login-clock");
+  if(lc) lc.textContent = h+":"+m+":"+s;
+  var ld = document.getElementById("login-date");
+  if(ld) ld.textContent = JOURS_FR2[now.getDay()]+" "+now.getDate()+" "+MOIS_FR2[now.getMonth()]+" "+now.getFullYear();
 
-var USERS={
-  admin:{ name:"RM — Latreche Zohra",            pass:"admin2026", role:"admin"       },
-  amb:  { name:"Assistant Media Buyer",           pass:"amb2026",   role:"assistant"   },
-  sc:   { name:"Superviseur Créatif",             pass:"sc2026",    role:"superviseur" },
-  cm:   { name:"Community Manager",              pass:"cm2026",    role:"cm"          },
-  dw:   { name:"Développeur Web",                pass:"dw2026",    role:"dw"          },
-  rrp:  { name:"Responsable Recherche Produits", pass:"rrp2026",   role:"membre"      },
-  mv1:  { name:"MV #1 — Medjahed Asmaa",         pass:"mv12026",   role:"mv"          },
-  mv2:  { name:"MV #2 — Medjdoubi Amina",        pass:"mv22026",   role:"mv"          },
-  mv3:  { name:"MV #3 — Aouabdi Nadia",          pass:"mv32026",   role:"mv"          },
-  mv4:  { name:"MV #4 — Sedikki Kawter",         pass:"mv42026",   role:"mv"          },
-};
-var JOURS=["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
-var _WEEKS_STATIC=[[1,7],[8,14],[15,21],[22,28],[29,30]];
-// Use getWeeks(daysInMonth(m,y)) for dynamic weeks
-var WEEKS=[[1,7],[8,14],[15,21],[22,28],[29,30]]; // updated on month change
-var currentUser=null;
+  var JOURS_FR2 = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+  var MOIS_FR2 = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+  var dow = now.getDay();
+  var del = document.getElementById("clock-date");
+  if(del) del.textContent = JOURS_FR2[dow]+" "+now.getDate()+" "+MOIS_FR2[now.getMonth()]+" "+now.getFullYear();
 
-// (moved to Firebase section)
-// (moved to Firebase section)
-// (moved to Firebase section)
-// (moved to Firebase section)
-function getMsgs(uid){try{return JSON.parse(localStorage.getItem(mkey(uid)))||[];}catch(e){return [];}}
-function setMsgs(uid,m){localStorage.setItem(mkey(uid),JSON.stringify(m));}
-function hasUnread(uid){return getMsgs(uid).some(function(m){return m.to===currentUser&&!m.read;});}
-
-function getCols(uid){
-  var role=USERS[uid].role;
-  var cols=[
-    {key:'cmd', label:'Nb Commandes',        cls:'bl',  edit:['assistant'],         num:true},
-    {key:'cree',label:'Créée semaine',        cls:'gr',  edit:[],                    num:true, auto:true, satOnly:true},
-    {key:'ls',  label:'Livrée semaine',       cls:'gr',  edit:['assistant'],         num:true, satOnly:true},
-    {key:'lj',  label:'Livrée jour',          cls:'am',  edit:['assistant'],         num:true},
-    {key:'rsup',label:'Remarque Superviseur', cls:'li',  edit:['superviseur'],       num:false},
-    {key:'note',label:'Notes',                cls:'',    edit:['assistant'],         num:false},
-  ];
-  if(role==='cm'||role==='dw'||role==='superviseur'){
-    cols.splice(5,0,{key:'camp',label:'Vidéos en campagnes',cls:'bl',edit:['assistant','sc','cm','dw'],num:true});
+  // Rappel quotidien : Sam(6) à Jeu(4), à 14:30
+  // dow: 0=Dim, 1=Lun, 2=Mar, 3=Mer, 4=Jeu, 5=Ven, 6=Sam
+  // Sam-Jeu = 6,0,1,2,3,4 (pas vendredi=5)
+  var isWorkDay = (dow !== 5); // tous sauf vendredi
+  var isDailyTime = (now.getHours()===14 && now.getMinutes()===30);
+  if(isWorkDay && isDailyTime && !_dailyShown && currentUser){
+    document.getElementById("banner-daily").classList.add("show");
+    _dailyShown = true;
   }
-  if(role==='mv'){
-    cols.splice(5,0,{key:'wina',label:'Winner Actif',   cls:'am',edit:['assistant'],num:true});
-    cols.splice(6,0,{key:'wind',label:'Winner Détecté', cls:'gr',edit:['assistant'],num:true});
+
+  // Rappel hebdomadaire : Mercredi(3) à 11h
+  var isWeeklyTime = (dow===3 && now.getHours()===11 && now.getMinutes()===0);
+  if(isWeeklyTime && !_weeklyShown && currentUser){
+    document.getElementById("banner-weekly").classList.add("show");
+    _weeklyShown = true;
   }
-  return cols;
+
+  // Reset flags at midnight
+  if(now.getHours()===0 && now.getMinutes()===0 && now.getSeconds()===0){
+    _dailyShown = false;
+    _weeklyShown = false;
+  }
 }
 
-function weekSums(uid){
-  var d=getData(uid);
-  return WEEKS.map(function(w){var s=0;for(var i=w[0];i<=w[1];i++)s+=parseInt(d['cmd_'+i]||0);return s;});
-}
-function totalCmds(uid){return weekSums(uid).reduce(function(a,b){return a+b;},0);}
-function totalLivree(uid){var d=getData(uid),s=0;for(var i=1;i<=daysInMonth(currentMonth.m,currentMonth.y);i++)s+=parseInt(d['lj_'+i]||0);return s;}
-function todayD(){var n=new Date();return(n.getMonth()===currentMonth.m&&n.getFullYear()===currentMonth.y)?n.getDate():0;}
-function curWeek(){
-  var day=todayD();if(!day)return 0;
-  var days=daysInMonth(currentMonth.m,currentMonth.y);
-  var weeks=getWeeks(days);
-  return weeks.findIndex(function(w){return day>=w[0]&&day<=w[1];});
-}
-function getWeeks(days){
-  var w=[[1,7],[8,14],[15,21],[22,28]];
-  if(days>28) w.push([29,days]);
-  return w;
-}
-
-/* LOGIN */
-document.getElementById("inp-pass").addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
-function doLogin(){
-  var uid=document.getElementById("sel-user").value;
-  var pass=document.getElementById("inp-pass").value.trim();
-  var err=document.getElementById("login-err");
-  if(!uid){err.style.display="block";err.textContent="Sélectionne ton profil.";return;}
-  if(!USERS[uid]||USERS[uid].pass!==pass){err.style.display="block";err.textContent="Code incorrect.";return;}
-  err.style.display="none";
-  currentUser=uid;
-  document.getElementById("login-screen").style.display="none";
-  var app=document.getElementById("app");app.style.display="flex";
-  document.getElementById("top-avatar").textContent=USERS[uid].name[0];
-  document.getElementById("top-name").textContent=USERS[uid].name.split("—")[0].trim().split(" ")[0];
-  var role=USERS[uid].role;
-  if(role==="admin") renderAdmin("recap");
-  else if(role==="assistant") renderAssistant();
-  else if(role==="superviseur") renderSup();
-  else renderMembre(uid);
-}
-function doLogout(){
-  currentUser=null;
-  document.getElementById("app").style.display="none";
-  document.getElementById("login-screen").style.display="flex";
-  document.getElementById("sel-user").value="";
-  document.getElementById("inp-pass").value="";
-}
-function showSaved(){var m=document.getElementById("saved-msg");if(m){m.classList.add("show");setTimeout(function(){m.classList.remove("show");},2000);}}
-
-window.saveField=function(el){
-  var uid=el.dataset.uid,key=el.dataset.key,d=getData(uid);
-  d[key]=el.type==="number"?(parseInt(el.value)||0):el.value;
-  setData(uid,d);showSaved();
+window.closeBanner = function(type){
+  document.getElementById("banner-"+type).classList.remove("show");
 };
 
-/* TABLE */
-function renderTable(uid,viewerRole){
-  var d=getData(uid),cols=getCols(uid),ws=weekSums(uid),td=todayD();
-  var clsMap={gr:'green',am:'amber',bl:'blue',li:'lilac'};
-  var html='<div class="table-wrap"><table class="dt"><thead><tr><th>Date</th><th>Jour</th>';
-  cols.forEach(function(c){html+='<th>'+c.label+'</th>';});
-  html+='</tr></thead><tbody>';
-  for(var day=1;day<=daysInMonth(currentMonth.m,currentMonth.y);day++){
-    var dt=new Date(currentMonth.y,currentMonth.m,day),dow=dt.getDay(),isWE=(dow===0||dow===6),isSat=(dow===6),isToday=(day===td);
-    var wi=WEEKS.findIndex(function(w){return day>=w[0]&&day<=w[1];});
-    html+='<tr class="'+(isWE?"we ":"")+(isToday?"tod":"")+'">';
-    html+='<td>'+String(day).padStart(2,"0")+'/06/2026</td>';
-    html+='<td style="font-weight:600;'+(isWE?"color:var(--blue)":"")+'">'+JOURS[dow]+'</td>';
-    cols.forEach(function(c){
-      var canEdit=c.edit.indexOf(viewerRole)!==-1;
-      if(c.auto){html+='<td>'+(isSat?'<span class="sat-tot">'+ws[wi]+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>';return;}
-      if(c.satOnly&&!isSat){html+='<td><span style="color:var(--text3)">—</span></td>';return;}
-      var val=d[c.key+'_'+day]||(c.num?0:'');
-      if(!c.num){
-        if(canEdit)html+='<td><input class="ti" data-uid="'+uid+'" data-key="'+c.key+'_'+day+'" value="'+String(val).replace(/"/g,'&quot;')+'" oninput="saveField(this)" placeholder="..."></td>';
-        else html+='<td style="font-size:11px;color:var(--text2);text-align:left;max-width:130px">'+val+'</td>';
-        return;
-      }
-      var cc='ci'+(c.cls?' '+c.cls:'');
-      var colorStyle=parseInt(val)>0&&c.cls?'color:var(--'+clsMap[c.cls]+')':'color:var(--text2)';
-      if(canEdit)html+='<td><input class="'+cc+'" type="number" min="0" data-uid="'+uid+'" data-key="'+c.key+'_'+day+'" value="'+val+'" oninput="saveField(this)"></td>';
-      else html+='<td style="'+colorStyle+';font-weight:600">'+val+'</td>';
-    });
-    html+='</tr>';
-  }
-  html+='</tbody></table></div>';
-  return html;
-}
-
-/* CHAT */
-function renderChat(uid,viewerUid){
-  var msgs=getMsgs(uid);
-  msgs.forEach(function(m){if(m.to===viewerUid)m.read=true;});
-  setMsgs(uid,msgs);
-  var html='<div class="chat-wrap">';
-  html+='<div class="chat-header"><div class="chat-dot"></div> Message avec RM — Latreche Zohra</div>';
-  html+='<div class="chat-msgs" id="chat-msgs">';
-  if(!msgs.length)html+='<div class="no-msg">Aucun message pour le moment 💬</div>';
-  msgs.forEach(function(m){
-    var isSent=(m.from===viewerUid);
-    html+='<div class="msg '+(isSent?"sent":"recv")+'">'+m.text+'<div class="msg-meta">'+m.time+'</div></div>';
-  });
-  html+='</div>';
-  html+='<div class="chat-inp-row">';
-  html+='<input class="chat-inp" id="chat-inp" placeholder="Écrire un message..." onkeydown="if(event.key===\'Enter\')sendMsg(\''+uid+'\',\''+viewerUid+'\')">';
-  html+='<button class="btn-send" onclick="sendMsg(\''+uid+'\',\''+viewerUid+'\')">Envoyer</button>';
-  html+='</div></div>';
-  return html;
-}
-
-window.sendMsg=function(uid,fromUid){
-  var inp=document.getElementById("chat-inp");
-  var text=inp.value.trim();if(!text)return;
-  var msgs=getMsgs(uid),now=new Date();
-  var time=String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
-  msgs.push({from:fromUid,to:(fromUid==="admin"?uid:"admin"),text:text,time:time,read:false});
-  setMsgs(uid,msgs);inp.value="";
-  var zone=document.getElementById("chat-zone");
-  if(zone){zone.innerHTML=renderChat(uid,fromUid);}
-  setTimeout(function(){var cm=document.getElementById("chat-msgs");if(cm)cm.scrollTop=cm.scrollHeight;},30);
-};
-
-/* EVALUATION SECTION */
-function renderEval(){
-  var memberKeys=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin"&&USERS[k].role!=="assistant";});
-  var rows=memberKeys.map(function(uid){
-    var cree=totalCmds(uid),livree=totalLivree(uid),pct=cree>0?Math.round(livree/cree*100):0;
-    return {uid:uid,cree:cree,livree:livree,pct:pct};
-  });
-  rows.sort(function(a,b){return b.pct-a.pct;});
-
-  var html='<div class="eval-section">';
-  html+='<div class="eval-title">🏆 Comparaison équipe — Créées vs Livrées</div>';
-  html+='<div class="eval-compare-table"><table><thead><tr>';
-  html+='<th>#</th><th style="text-align:left">Membre</th>';
-  html+='<th>Créées</th><th>Livrées</th><th>Taux</th>';
-  html+='<th class="bar-cell">Performance</th></tr></thead><tbody>';
-
-  rows.forEach(function(r,i){
-    var rankCls=i===0?"rank-1":i===1?"rank-2":i===2?"rank-3":"rank-n";
-    var pctCls=r.pct>=80?"high":r.pct>=50?"mid":"low";
-    var pctBadgeCls=r.pct>=80?"pct-high":r.pct>=50?"pct-mid":"pct-low";
-    html+='<tr>';
-    html+='<td><span class="rank-badge '+rankCls+'">'+(i+1)+'</span></td>';
-    html+='<td style="text-align:left;font-weight:600">'+USERS[r.uid].name+'</td>';
-    html+='<td class="num" style="color:var(--blue)">'+r.cree+'</td>';
-    html+='<td class="num" style="color:var(--green)">'+r.livree+'</td>';
-    html+='<td><span class="pct-badge '+pctBadgeCls+'">'+r.pct+'%</span></td>';
-    html+='<td class="bar-cell"><div class="bar-wrap" style="width:160px">';
-    html+='<div class="bar-fill '+pctCls+'" style="width:'+Math.min(r.pct,100)+'%"></div></div></td>';
-    html+='</tr>';
-  });
-  html+='</tbody></table></div>';
-
-  // Mini cards
-  html+='<div class="eval-cards">';
-  rows.forEach(function(r){
-    var pctCls=r.pct>=80?"high":r.pct>=50?"mid":"low";
-    var fillColor=r.pct>=80?"linear-gradient(90deg,#16A34A,#4ADE80)":r.pct>=50?"linear-gradient(90deg,#D97706,#FCD34D)":"linear-gradient(90deg,#DC2626,#F87171)";
-    var scoreColor=r.pct>=80?"var(--green)":r.pct>=50?"var(--amber)":"var(--red)";
-    html+='<div class="eval-card">';
-    html+='<div class="eval-card-name">'+USERS[r.uid].name+'</div>';
-    html+='<div class="eval-card-bar"><div class="eval-card-fill" style="width:'+Math.min(r.pct,100)+'%;height:8px;border-radius:20px;background:'+fillColor+'"></div></div>';
-    html+='<div class="eval-card-stats"><span>Créées: <b>'+r.cree+'</b></span><span>Livrées: <b>'+r.livree+'</b></span></div>';
-    html+='<div class="eval-score" style="color:'+scoreColor+'">'+r.pct+'% <span style="font-size:12px;color:var(--text2);font-weight:400">livraison</span></div>';
-    html+='</div>';
-  });
-  html+='</div></div>';
-  return html;
-}
-
-/* MEMBRE VIEW */
-function renderMembre(uid){
-  var u=USERS[uid],ws=weekSums(uid),td=todayD(),d=getData(uid);
-  var curTab=window._memTab||"data";
-  var unread=hasUnread(uid);
-  var html='<div class="page-title">'+u.name+'</div>';
-  html+='<div class="page-sub">'+monthLabel()+' · Consulte tes données</div>';
-  html+='<div class="view-tabs">';
-  html+='<button class="vtab'+(curTab==="data"?" active":"")+'" onclick="switchMemTab(\'data\')">📊 Mes données</button>';
-  html+='<button class="vtab'+(curTab==="msg"?" active":"")+'" onclick="switchMemTab(\'msg\')">';
-  html+='💬 Message RM'+(unread?'<span class="bdot"></span>':'')+'</button>';
-  html+='</div>';
-  if(curTab==="data"){
-    html+='<div class="stats-row">';
-    html+='<div class="stat-card"><div class="stat-label">Total Juin</div><div class="stat-val blue">'+ws.reduce(function(a,b){return a+b;},0)+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-val green">'+ws[curWeek()]+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Aujourd\'hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Livrées total</div><div class="stat-val lilac">'+totalLivree(uid)+'</div></div>';
-    html+='</div>';
-    html+=renderTable(uid,'membre');
-  } else {
-    html+='<div id="chat-zone">'+renderChat(uid,uid)+'</div>';
-  }
-  html+='<div style="padding:.5rem 0;text-align:right"><span class="saved-ok" id="saved-msg">✓ Sauvegardé</span></div>';
-  document.getElementById("main-content").innerHTML=html;
-  window.switchMemTab=function(tab){window._memTab=tab;renderMembre(uid);};
-  if(curTab==="msg")setTimeout(function(){var cm=document.getElementById("chat-msgs");if(cm)cm.scrollTop=cm.scrollHeight;},50);
-}
-
-/* ASSISTANT VIEW */
-function renderAssistant(){
-  var memberKeys=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin"&&USERS[k].role!=="assistant";});
-  var selUid=window._asel||memberKeys[0];
-  var curTab=window._atab||"data";
-
-  var html='<div class="page-title">Saisie — Assistant</div>';
-  html+='<div class="page-sub">Sélectionne un membre et remplis ses données</div>';
-  html+='<div class="view-tabs">';
-  html+='<button class="vtab'+(curTab==="data"?" active":"")+'" onclick="aTab(\'data\')">📝 Saisie</button>';
-  html+='<button class="vtab'+(curTab==="eval"?" active":"")+'" onclick="aTab(\'eval\')">🏆 Évaluation</button>';
-  html+='</div>';
-
-  if(curTab==="data"){
-    var ws=weekSums(selUid),td=todayD(),d=getData(selUid);
-    html+='<div class="member-tabs">';
-    memberKeys.forEach(function(uid){
-      var short=USERS[uid].name.indexOf("—")!==-1?USERS[uid].name.split("—").pop().trim().split(" ")[0]:USERS[uid].name.split(" ").slice(0,2).join(" ");
-      html+='<button class="mtab'+(uid===selUid?" active":"")+'" onclick="asel(\''+uid+'\')">'+short+'</button>';
-    });
-    html+='</div>';
-    html+='<div class="stats-row">';
-    html+='<div class="stat-card"><div class="stat-label">Total Juin</div><div class="stat-val blue">'+ws.reduce(function(a,b){return a+b;},0)+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-val green">'+ws[curWeek()]+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Aujourd\'hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Livrées total</div><div class="stat-val lilac">'+totalLivree(selUid)+'</div></div>';
-    html+='</div>';
-    html+=renderTable(selUid,'assistant');
-  } else {
-    html+=renderEval();
-  }
-  html+='<div style="padding:.5rem 0;text-align:right"><span class="saved-ok" id="saved-msg">✓ Sauvegardé</span></div>';
-  document.getElementById("main-content").innerHTML=html;
-  window.asel=function(uid){window._asel=uid;renderAssistant();};
-  window.aTab=function(t){window._atab=t;renderAssistant();};
-}
-
-/* SUPERVISEUR VIEW */
-function renderSup(){
-  var memberKeys=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin"&&USERS[k].role!=="superviseur";});
-  var selUid=window._ssel||memberKeys[0];
-  var html='<div class="page-title">Superviseur Créatif</div>';
-  html+='<div class="page-sub">Ajoute tes remarques pour chaque membre</div>';
-  html+='<div class="member-tabs">';
-  memberKeys.forEach(function(uid){
-    var short=USERS[uid].name.indexOf("—")!==-1?USERS[uid].name.split("—").pop().trim().split(" ")[0]:USERS[uid].name.split(" ").slice(0,2).join(" ");
-    html+='<button class="mtab'+(uid===selUid?" active":"")+'" onclick="ssel(\''+uid+'\')">'+short+'</button>';
-  });
-  html+='</div>';
-  html+=renderTable(selUid,'superviseur');
-  html+='<div style="padding:.5rem 0;text-align:right"><span class="saved-ok" id="saved-msg">✓ Sauvegardé</span></div>';
-  document.getElementById("main-content").innerHTML=html;
-  window.ssel=function(uid){window._ssel=uid;renderSup();};
-}
-
-/* ADMIN VIEW */
-function renderAdmin(tab){
-  var memberKeys=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin";});
-  var curTab=tab||window._adTab||"recap";
-  window._adTab=curTab;
-  var totalUnread=memberKeys.filter(function(uid){return getMsgs(uid).some(function(m){return m.to==="admin"&&!m.read;});}).length;
-
-  var html='<div class="page-title">Dashboard RM 💙</div>';
-  html+='<div class="page-sub">'+monthLabel()+' · Vue complète équipe</div>';
-  html+='<div class="view-tabs">';
-  html+='<button class="vtab'+(curTab==="recap"?" active":"")+'" onclick="adTab(\'recap\')">📊 Recap</button>';
-  html+='<button class="vtab'+(curTab==="eval"?" active":"")+'" onclick="adTab(\'eval\')">🏆 Évaluation</button>';
-  html+='<button class="vtab'+(curTab==="msg"?" active":"")+'" onclick="adTab(\'msg\')">';
-  html+='💬 Messages'+(totalUnread>0?'<span class="bdot"></span>':'')+'</button>';
-  html+='</div>';
-
-  if(curTab==="recap"){
-    var grandTotal=0,weekTotals=WEEKS.map(function(){return 0;}),totals={};
-    memberKeys.forEach(function(uid){
-      var ws=weekSums(uid),t=ws.reduce(function(a,b){return a+b;},0);
-      totals[uid]={total:t,weeks:ws,livree:totalLivree(uid)};
-      grandTotal+=t;ws.forEach(function(v,i){weekTotals[i]+=v;});
-    });
-    html+='<div class="stats-row">';
-    html+='<div class="stat-card"><div class="stat-label">Total équipe</div><div class="stat-val blue">'+grandTotal+'</div></div>';
-    WEEKS.forEach(function(w,wi){
-      html+='<div class="stat-card"><div class="stat-label">S'+(wi+1)+' ('+w[0]+'-'+w[1]+')</div><div class="stat-val '+(wi===curWeek()?"green":"blue")+'">'+weekTotals[wi]+'</div></div>';
-    });
-    html+='</div>';
-    html+='<div class="recap-wrap"><table><thead><tr><th>Membre</th>';
-    WEEKS.forEach(function(w,wi){html+='<th>S'+(wi+1)+'</th>';});
-    html+='<th>Total</th><th>Livrées</th></tr></thead><tbody>';
-    memberKeys.forEach(function(uid){
-      var t=totals[uid];
-      html+='<tr style="cursor:pointer" onclick="adShowDetail(\''+uid+'\')">';
-      html+='<td>'+USERS[uid].name+'</td>';
-      t.weeks.forEach(function(v){html+='<td class="num">'+v+'</td>';});
-      html+='<td class="num big">'+t.total+'</td>';
-      html+='<td class="num" style="color:var(--green)">'+t.livree+'</td>';
-      html+='</tr>';
-    });
-    html+='<tr class="tot"><td>TOTAL</td>';
-    weekTotals.forEach(function(v){html+='<td class="num">'+v+'</td>';});
-    html+='<td class="num big">'+grandTotal+'</td><td></td></tr>';
-    html+='</tbody></table></div>';
-    html+='<div class="detail-zone" id="detail-zone"></div>';
-
-  } else if(curTab==="eval"){
-    html+=renderEval();
-
-  } else if(curTab==="msg"){
-    var selMsgUid=window._adMsg||memberKeys[0];
-    html+='<div style="display:grid;grid-template-columns:190px 1fr;gap:1rem">';
-    html+='<div class="msg-sidebar">';
-    memberKeys.forEach(function(uid){
-      var unread=getMsgs(uid).some(function(m){return m.to==="admin"&&!m.read;});
-      var short=USERS[uid].name.indexOf("—")!==-1?USERS[uid].name.split("—").pop().trim().split(" ")[0]:USERS[uid].name.split(" ")[0];
-      html+='<div class="msg-sidebar-item'+(uid===selMsgUid?" active":"")+'" onclick="adSelMsg(\''+uid+'\')">';
-      html+=short+(unread?'<span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block"></span>':'');
-      html+='</div>';
-    });
-    html+='</div>';
-    html+='<div id="chat-zone">'+renderChat(selMsgUid,"admin")+'</div>';
-    html+='</div>';
-    window.adSelMsg=function(uid){
-      window._adMsg=uid;
-      var zone=document.getElementById("chat-zone");
-      if(zone){zone.innerHTML=renderChat(uid,"admin");setTimeout(function(){var cm=document.getElementById("chat-msgs");if(cm)cm.scrollTop=cm.scrollHeight;},30);}
-      document.querySelectorAll(".msg-sidebar-item").forEach(function(el){
-        var u=el.getAttribute("onclick").match(/'([^']+)'/)[1];
-        el.classList.toggle("active",u===uid);
-      });
-    };
-    setTimeout(function(){var cm=document.getElementById("chat-msgs");if(cm)cm.scrollTop=cm.scrollHeight;},50);
-  }
-
-  document.getElementById("main-content").innerHTML=html;
-  window.adTab=function(t){renderAdmin(t);};
-  window.adShowDetail=function(uid){
-    var d=getData(uid),zone=document.getElementById("detail-zone");if(!zone)return;
-    var cree=totalCmds(uid),livree=totalLivree(uid),pct=cree>0?Math.round(livree/cree*100):0;
-    var html='<div class="detail-card"><div class="detail-title">📅 '+USERS[uid].name+'</div>';
-    html+='<div class="bubble-grid">';
-    for(var day=1;day<=daysInMonth(currentMonth.m,currentMonth.y);day++){
-      var dt=new Date(currentMonth.y,currentMonth.m,day),isWE=(dt.getDay()===0||dt.getDay()===6),v=parseInt(d['cmd_'+day]||0);
-      html+='<div class="bub'+(isWE?" we":"")+'">'+'<div class="bd">'+String(day).padStart(2,"0")+'/06</div>'+'<div class="bv'+(v>0?" has":"")+'">'+v+'</div></div>';
-    }
-    html+='</div>';
-    html+='<div style="display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap">';
-    html+='<div class="stat-card"><div class="stat-label">Créées</div><div class="stat-val blue">'+cree+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Livrées</div><div class="stat-val green">'+livree+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Taux</div><div class="stat-val '+(pct>=80?"green":pct>=50?"amber":"")+'">'+pct+'%</div></div>';
-    html+='</div></div>';
-    zone.innerHTML=html;zone.scrollIntoView({behavior:"smooth"});
-  };
-}
+setInterval(updateClock, 1000);
+updateClock();
 </script>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-
 
 </body>
 </html>
@@ -1566,6 +1301,7 @@ renderSup = function(){
 
   html+='<div style="padding:.5rem 0;text-align:right"><span class="saved-ok" id="saved-msg">✓ Sauvegardé</span></div>';
   document.getElementById("main-content").innerHTML=html;
+  renderSidebar("superviseur", curTab);
   window.ssel=function(uid){window._ssel=uid;renderSup();};
   window.stab=function(t){window._stab=t;renderSup();};
 };
