@@ -713,13 +713,23 @@ function renderGenRow(name,cols,r,i,canEdit){
   cols.forEach(function(c){
     var val = r[c.key]||'';
     if(c.type==='select'){
+      var vals = val ? (Array.isArray(val)?val:val.split(',').filter(Boolean)) : [];
       if(canEdit){
-        html+='<td><select class="ci" style="width:auto" data-tname="'+name+'" data-row="'+i+'" data-key="'+c.key+'" onchange="saveGenCell(this)">';
-        c.options.forEach(function(o){ html+='<option value="'+o+'"'+(val===o?' selected':'')+'>'+o+'</option>'; });
-        html+='</select></td>';
+        html+='<td><div style="display:flex;flex-wrap:wrap;gap:4px;min-width:180px">';
+        c.options.forEach(function(o){
+          var checked=vals.indexOf(o)!==-1;
+          var oc={'hook':'#DBEAFE','visuel':'#DCFCE7','copy':'#FEF3C7','audience':'#EDE9FE'};
+          var tc={'hook':'var(--blue)','visuel':'var(--green)','copy':'var(--amber)','audience':'var(--lilac)'};
+          html+='<label style="display:flex;align-items:center;gap:3px;cursor:pointer;padding:2px 8px;border-radius:20px;border:1.5px solid var(--border);font-size:11px;font-weight:600;background:'+(checked?(oc[o]||'var(--bg3)'):'var(--bg3)')+';color:'+(checked?(tc[o]||'var(--text)'):'var(--text2)')+'">';
+          html+='<input type="checkbox" data-tname="'+name+'" data-row="'+i+'" data-key="'+c.key+'" data-opt="'+o+'" '+(checked?'checked':'')+' onchange="saveMultiCheck(this)" style="display:none">'+o+'</label>';
+        });
+        html+='</div></td>';
       } else {
-        var oc={'hook':'var(--blue)','visuel':'var(--green)','copy':'var(--amber)','audience':'var(--lilac)'};
-        html+='<td style="font-weight:600;color:'+(oc[val]||'var(--text)')+'">'+val+'</td>';
+        var oc2={'hook':'var(--blue)','visuel':'var(--green)','copy':'var(--amber)','audience':'var(--lilac)'};
+        html+='<td><div style="display:flex;flex-wrap:wrap;gap:3px">';
+        if(vals.length===0) html+='<span style="color:var(--text3)">—</span>';
+        vals.forEach(function(v){ html+='<span style="padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:var(--bg3);color:'+(oc2[v]||'var(--text)')+'">'+v+'</span>'; });
+        html+='</div></td>';
       }
     } else if(c.type==='number'){
       if(canEdit) html+='<td><input class="ci" type="number" min="0" data-tname="'+name+'" data-row="'+i+'" data-key="'+c.key+'" value="'+(val||0)+'" oninput="saveGenCell(this)"></td>';
@@ -740,6 +750,25 @@ window.saveGenCell=function(el){
   if(!rows[row]) rows[row]={};
   rows[row][key]=el.type==='number'?(parseInt(el.value)||0):el.value;
   setTable(name,rows);
+  showSaved();
+};
+
+window.saveMultiCheck=function(el){
+  if(isReadOnly()){showToast("Mois archivé — lecture seule");el.checked=!el.checked;return;}
+  var name=el.dataset.tname, row=parseInt(el.dataset.row), key=el.dataset.key, opt=el.dataset.opt;
+  var rows=getTable(name);
+  if(!rows[row]) rows[row]={};
+  var vals=rows[row][key]?(Array.isArray(rows[row][key])?rows[row][key]:rows[row][key].split(',').filter(Boolean)):[];
+  if(el.checked){ if(vals.indexOf(opt)===-1) vals.push(opt); }
+  else { vals=vals.filter(function(v){return v!==opt;}); }
+  rows[row][key]=vals;
+  setTable(name,rows);
+  // update label style live
+  var lbl=el.parentElement;
+  var oc={'hook':'#DBEAFE','visuel':'#DCFCE7','copy':'#FEF3C7','audience':'#EDE9FE'};
+  var tc={'hook':'var(--blue)','visuel':'var(--green)','copy':'var(--amber)','audience':'var(--lilac)'};
+  lbl.style.background=el.checked?(oc[opt]||'var(--bg3)'):'var(--bg3)';
+  lbl.style.color=el.checked?(tc[opt]||'var(--text)'):'var(--text2)';
   showSaved();
 };
 
