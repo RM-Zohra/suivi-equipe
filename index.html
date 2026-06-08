@@ -552,11 +552,11 @@ function genTbl(name,cols,canEdit){
         else h+='<td style="font-size:11px;color:var(--tx2)">'+val+"</td>";
       }
     });
-    if(canEdit)h+='<td><button class="gdel" onclick="delRow(\''+name+"',"+i+')">x</button></td>';
+    if(canEdit)h+="<td><button class='gdel' data-action='delRow' data-name='"+name+"' data-row='"+i+"'>x</button></td>";
     h+="</tr>";
   });
   h+="</tbody></table></div>";
-  if(canEdit)h+='<button class="gadd" onclick="addRow(\''+name+"'\">+ Ajouter</button>";
+  if(canEdit)h+='<button class="gadd" data-action="addRow" data-name="'+name+'">+ Ajouter</button>";
   return h;
 }
 
@@ -571,7 +571,7 @@ function rChat(uid,viewer){
   msgs.forEach(function(m){h+='<div class="msg '+(m.from===viewer?"sent":"recv")+'">'+m.text+'<div class="mmt">'+m.time+"</div></div>";});
   h+="</div>";
   h+='<div class="cir"><input class="cin" id="cin" placeholder="Ecrire..." onkeydown="if(event.key===\'Enter\')doSendMsg(\''+uid+"',\\'"+viewer+"\\')"+'>';
-  h+='<button class="csb" onclick="doSendMsg(\''+uid+"','"+viewer+"'\")>Envoyer</button></div></div>";
+  h+='<button class="csb" data-action="sendMsg" data-uid="'+uid+'" data-from="'+viewer+'">Envoyer</button></div></div>";
   return h;
 }
 function doSendMsg(uid,from){
@@ -626,7 +626,7 @@ function mkSB(role,active){
   var h='<div class="sbs">Navigation</div>';
   items.forEach(function(it){
     var ur=it.dot&&unreadAdmin()>0;
-    h+='<div class="si'+(it.t===active?" active":"")+'" onclick="sbNav(\''+it.t+"'\")>";
+    h+="<div class='si"+(it.t===active?" active":"")+" ' data-tab='"+it.t+"' onclick='window.sbNav(this.dataset.tab)'>";
     h+='<span class="sii">'+it.i+"</span>"+it.l;
     if(it.dot)h+='<span class="sd'+(ur?" on":"")+'" id="sbdot"></span>';
     h+="</div>";
@@ -689,8 +689,8 @@ function rMem(uid){
   var unread=gm(uid).some(function(m){return m.to===uid&&!m.read;});
   document.getElementById("sb").style.display="none";
   var h='<div class="pt">'+U[uid].n+'</div><div class="ps">'+mLabel()+'</div>';
-  h+='<div class="vt"><button class="vtb'+(tab==="data"?" active":"")+'" onclick="window._mt=\'data\';rMem(\''+uid+"'\")>📊 Mes donnees</button>";
-  h+='<button class="vtb'+(tab==="msg"?" active":"")+'" onclick="window._mt=\'msg\';rMem(\''+uid+"'\")>💬 Message RM"+(unread?'<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--rd);margin-left:4px;vertical-align:middle"></span>':"")+"</button></div>";
+  h+="<div class='vt'><button class='vtb"+(tab==="data"?" active":"")+" ' data-action='rMem' data-tab='data' data-uid='"+uid+"'>📊 Donnees</button>";
+  h+="<button class='vtb"+(tab==="msg"?" active":"")+" ' data-action='rMem' data-tab='msg' data-uid='"+uid+"'>💬 Message RM"+(unread?"<span style='display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--rd);margin-left:4px;vertical-align:middle'></span>":"")+"/button></div>";
   if(tab==="data"){
     var objs=gobj(),obj=objs[uid+mkey()]||0,cree=totCmds(uid),pct=obj>0?Math.min(Math.round(cree/obj*100),100):0;
     h+='<div class="sr"><div class="sc bl"><div class="sl">Total</div><div class="sv bl">'+cree+"</div></div>";
@@ -713,10 +713,10 @@ function rMV(uid){
   var unread=gm(uid).some(function(m){return m.to===uid&&!m.read;});
   document.getElementById("sb").style.display="none";
   var h='<div class="pt">'+U[uid].n+'</div><div class="ps">'+mLabel()+"</div>";
-  h+='<div class="vt"><button class="vtb'+(tab==="data"?" active":"")+'" onclick="window._mvt=\'data\';rMV(\''+uid+"'\")>📊 Donnees</button>";
-  h+='<button class="vtb'+(tab==="perf"?" active":"")+'" onclick="window._mvt=\'perf\';rMV(\''+uid+"'\")>✅ Creatives +</button>";
-  h+='<button class="vtb'+(tab==="nperf"?" active":"")+'" onclick="window._mvt=\'nperf\';rMV(\''+uid+"'\")>❌ Creatives -</button>";
-  h+='<button class="vtb'+(tab==="msg"?" active":"")+'" onclick="window._mvt=\'msg\';rMV(\''+uid+"'\")>💬 Message RM"+(unread?'<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--rd);margin-left:4px;vertical-align:middle"></span>':"")+"</button></div>";
+  h+="<div class='vt'><button class='vtb"+(tab==="data"?" active":"")+" ' data-action='rMV' data-tab='data' data-uid='"+uid+"'>📊 Donnees</button>";
+  h+="<button class='vtb"+(tab==="perf"?" active":"")+" ' data-action='rMV' data-tab='perf' data-uid='"+uid+"'>✅ Creatives +</button>";
+  h+="<button class='vtb"+(tab==="nperf"?" active":"")+" ' data-action='rMV' data-tab='nperf' data-uid='"+uid+"'>❌ Creatives -</button>";
+  h+="<button class='vtb"+(tab==="msg"?" active":"")+" ' data-action='rMV' data-tab='msg' data-uid='"+uid+"'>💬 Message RM"+(unread?"<span style='display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--rd);margin-left:4px;vertical-align:middle'></span>":"")+"/button></div>";
   if(tab==="data"){
     h+='<div class="sr"><div class="sc bl"><div class="sl">Total</div><div class="sv bl">'+totCmds(uid)+"</div></div>";
     h+='<div class="sc gn"><div class="sl">Semaine</div><div class="sv gn">'+ws[curWk()]+"</div></div>";
@@ -744,7 +744,7 @@ function rAsst(){
   var h='<div class="pt">Saisie - Assistant</div><div class="ps">'+mLabel()+"</div>";
   if(tab==="data"){
     h+='<div class="mt">';
-    mks.forEach(function(uid){h+='<button class="mtb'+(uid===sel?" active":"")+'" onclick="window._as=\''+uid+"';rAsst()\">"+U[uid].n.split(" ")[0]+"</button>";});
+    mks.forEach(function(uid){h+='<button class="mtb'+(uid===sel?" active":"")+'" data-action="rAsst" data-uid="'+uid+'">'+U[uid].n.split(" ")[0]+"</button>";});
     h+="</div>";
     var ws=wkSums(sel),d=gd(sel),td=todayD();
     h+='<div class="sr"><div class="sc bl"><div class="sl">Total</div><div class="sv bl">'+totCmds(sel)+"</div></div>";
@@ -756,15 +756,15 @@ function rAsst(){
   else if(tab==="perf"||tab==="nperf"){
     var tsel=mvks.indexOf(sel)!==-1?sel:mvks[0];
     h+='<div class="mt">';
-    mvks.forEach(function(uid){h+='<button class="mtb'+(uid===tsel?" active":"")+'" onclick="window._as=\''+uid+"';rAsst()\">"+U[uid].n.split(" ").slice(-1)[0]+"</button>";});
+    mvks.forEach(function(uid){h+='<button class="mtb'+(uid===tsel?" active":"")+'" data-action="rAsst" data-uid="'+uid+'">'+U[uid].n.split(" ").slice(-1)[0]+"</button>";});
     h+="</div>";
     h+='<div style="font-weight:700;margin-bottom:.75rem">'+(tab==="perf"?"✅ Creatives Performantes":"❌ Creatives Non Performantes")+" - "+U[tsel].n+"</div>";
     h+=genTbl((tab==="perf"?"perf_":"nperf_")+tsel,tab==="perf"?COLS_PERF():COLS_NPERF(),true);
   } else if(tab==="perfads"){
     var sub=window._aps||"scaling";
-    h+='<div class="mt"><button class="mtb'+(sub==="scaling"?" active":"")+'" onclick="window._aps=\'scaling\';rAsst()">📊 Scaling</button>';
-    h+='<button class="mtb'+(sub==="off"?" active":"")+'" onclick="window._aps=\'off\';rAsst()">🔴 Off</button>';
-    h+='<button class="mtb'+(sub==="winner"?" active":"")+'" onclick="window._aps=\'winner\';rAsst()">🏆 Winners</button></div>';
+    h+='<div class="mt"><button class="mtb'+(sub==="scaling"?" active":"")+'" data-action="rAsst" data-sub="scaling">📊 Scaling</button>';
+    h+='<button class="mtb'+(sub==="off"?" active":"")+'" data-action="rAsst" data-sub="off">🔴 Off</button>';
+    h+='<button class="mtb'+(sub==="winner"?" active":"")+'" data-action="rAsst" data-sub="winner">🏆 Winners</button></div>';
     h+=genTbl("perfads_"+sub,sub==="winner"?COLS_WIN():COLS_SCAL(),true);
   }
   h+='<div style="padding:.5rem 0;text-align:right"><span class="sv2" id="sv">Sauvegarde</span></div>';
@@ -778,7 +778,7 @@ function rSup(){
   var h='<div class="pt">Superviseur Creatif</div><div class="ps">'+mLabel()+"</div>";
   if(tab==="remarques"){
     h+='<div class="mt">';
-    mks.forEach(function(uid){h+='<button class="mtb'+(uid===sel?" active":"")+'" onclick="window._ss=\''+uid+"';rSup()\">"+U[uid].n.split(" ")[0]+"</button>";});
+    mks.forEach(function(uid){h+='<button class="mtb'+(uid===sel?" active":"")+'" data-action="rSup" data-uid="'+uid+'">'+U[uid].n.split(" ")[0]+"</button>";});
     h+="</div>";
     h+=tblData(sel,"superviseur");
   } else {
@@ -809,7 +809,7 @@ function rAdmin(tab){
     h+="<th>Total</th><th>Livrees</th></tr></thead><tbody>";
     mks.forEach(function(uid){
       var t=tots[uid];
-      h+='<tr style="cursor:pointer" onclick="adDetail(\''+uid+"'\")><td>"+U[uid].n+"</td>";
+      h+="<tr style='cursor:pointer' data-uid='"+uid+"' onclick='adDetail(this.dataset.uid)'><td>"+U[uid].n+"</td>";
       t.ws.forEach(function(v){h+='<td class="nm">'+v+"</td>";});
       h+='<td class="nm big">'+t.t+'</td><td class="nm" style="color:var(--gn)">'+t.l+"</td></tr>";
     });
@@ -837,7 +837,7 @@ function rAdmin(tab){
   else if(tab==="perf"||tab==="nperf"){
     var selMv=window._adMv||mvks[0];
     h+='<div class="mt">';
-    mvks.forEach(function(uid){h+='<button class="mtb'+(uid===selMv?" active":"")+'" onclick="window._adMv=\''+uid+"';rAdmin('"+tab+"')\">"+U[uid].n.split(" ").slice(-1)[0]+"</button>";});
+  mvks.forEach(function(uid){h+="<button class='mtb"+(uid===selMv?" active":"")+" ' data-action='rAdmin' data-tab='"+window._adTab+"' data-uid='"+uid+"'>"+(U[uid].n.split(" ").slice(-1)[0])+"</button>";});
     h+="</div>";
     h+='<div style="font-weight:700;margin-bottom:.75rem">'+(tab==="perf"?"✅ Creatives Performantes":"❌ Creatives Non Performantes")+" - "+U[selMv].n+"</div>";
     h+=genTbl((tab==="perf"?"perf_":"nperf_")+selMv,tab==="perf"?COLS_PERF():COLS_NPERF(),false);
@@ -846,16 +846,16 @@ function rAdmin(tab){
     h+=genTbl("strat_crea",COLS_STRAT(),false);
   } else if(tab==="perfads"){
     var sub2=window._adps||"scaling";
-    h+='<div class="mt"><button class="mtb'+(sub2==="scaling"?" active":"")+'" onclick="window._adps=\'scaling\';rAdmin(\'perfads\')">📊 Scaling</button>';
-    h+='<button class="mtb'+(sub2==="off"?" active":"")+'" onclick="window._adps=\'off\';rAdmin(\'perfads\')">🔴 Off</button>';
-    h+='<button class="mtb'+(sub2==="winner"?" active":"")+'" onclick="window._adps=\'winner\';rAdmin(\'perfads\')">🏆 Winners</button></div>';
+    h+='<div class="mt"><button class="mtb'+(sub2==="scaling"?" active":"")+'" data-action="rAdmin" data-tab="perfads" data-sub="scaling">📊 Scaling</button>';
+    h+='<button class="mtb'+(sub2==="off"?" active":"")+'" data-action="rAdmin" data-tab="perfads" data-sub="off">🔴 Off</button>';
+    h+='<button class="mtb'+(sub2==="winner"?" active":"")+'" data-action="rAdmin" data-tab="perfads" data-sub="winner">🏆 Winners</button></div>';
     h+=genTbl("perfads_"+sub2,sub2==="winner"?COLS_WIN():COLS_SCAL(),true);
   } else if(tab==="msg"){
     var selMsg=window._adMsg||mks[0];
     h+='<div style="display:grid;grid-template-columns:190px 1fr;gap:1rem"><div class="msb">';
     mks.forEach(function(uid){
       var ur=gm(uid).some(function(m){return m.to==="admin"&&!m.read;});
-      h+='<div class="msbi'+(uid===selMsg?" active":"")+'" onclick="adSelMsg(\''+uid+"'\")>"+U[uid].n.split(" ")[0]+(ur?'<span style="width:7px;height:7px;border-radius:50%;background:var(--rd);display:inline-block"></span>':"")+"</div>";
+      h+="<div class='msbi"+(uid===selMsg?" active":"")+" ' data-uid='"+uid+"' onclick='adSelMsg(this.dataset.uid)'>"+U[uid].n.split(" ")[0]+(ur?"<span style='width:7px;height:7px;border-radius:50%;background:var(--rd);display:inline-block'></span>":"")+"</div>";
     });
     h+='</div><div id="chat-zone">'+rChat(selMsg,"admin")+"</div></div>";
   }
@@ -896,6 +896,37 @@ function rAdmin(tab){
     },200);
   }
 }
+
+// EVENT DELEGATION - handles all dynamic onclick
+document.addEventListener('click', function(e){
+  var el = e.target.closest('[data-action]');
+  if(!el) return;
+  var action = el.dataset.action;
+  var uid = el.dataset.uid || '';
+  var tab = el.dataset.tab || '';
+  var sub = el.dataset.sub || '';
+  var name = el.dataset.name || '';
+  var row = el.dataset.row || '';
+  
+  if(action==='nav') sbNav(tab);
+  else if(action==='rMem') { if(tab) window._mt=tab; rMem(uid); }
+  else if(action==='rMV') { if(tab) window._mvt=tab; rMV(uid); }
+  else if(action==='rAsst') { if(uid) window._as=uid; if(sub) window._aps=sub; rAsst(); }
+  else if(action==='rSup') { if(uid) window._ss=uid; rSup(); }
+  else if(action==='rAdmin') { if(uid) window._adMv=uid; if(sub) window._adps=sub; if(tab) window._adTab=tab; rAdmin(tab||window._adTab); }
+  else if(action==='adDetail') { window.adDetail && window.adDetail(uid); }
+  else if(action==='adSelMsg') { window.adSelMsg && window.adSelMsg(uid); }
+  else if(action==='addRow') addRow(name);
+  else if(action==='delRow') delRow(name, parseInt(row));
+  else if(action==='sendMsg') doSendMsg(uid, el.dataset.from||'');
+  else if(action==='sendAnn') sendAnn();
+  else if(action==='exportCSV') exportCSV(uid);
+  else if(action==='exportAll') exportAll();
+  else if(action==='saveObj') { saveObj(uid, el.value); rAdmin('recap'); }
+  else if(action==='closeAnn') { var z=document.getElementById('ann-zone'); if(z) z.style.display='none'; }
+  else if(action==='closeBd') document.getElementById('bd').classList.remove('on');
+  else if(action==='closeBw') document.getElementById('bw').classList.remove('on');
+});
 
 // EXPOSE ALL GLOBALS
 window.sbNav=sbNav; window.doLogin=doLogin; window.doLogout=doLogout;
