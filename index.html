@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Suivi Commandes — ETS. LAHMAR WALID</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -12,9 +12,9 @@
   --text:#E6EDF3;--text2:#8B949E;--text3:#6E7681;
   --blue:#2F81F7;--blue2:#1F6FEB;--green:#3FB950;--red:#F85149;
   --amber:#D29922;--purple:#BC8CFF;
-  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --font:system-ui,sans-serif;--mono:'Courier New',monospace;
 }
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
 /* ── LOGIN ── */
 #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;
@@ -28,19 +28,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .login-logo-icon{width:36px;height:36px;background:var(--blue);border-radius:8px;
   display:flex;align-items:center;justify-content:center;font-size:18px}
 .login-logo-text{font-size:15px;font-weight:600;color:var(--text)}
-.login-logo-sub{font-size:11px;color:var(--text2);font-family:var(--mono)}
+.login-logo-sub{font-size:11px;color:var(--text2);font-family:'Courier New',monospace}
 h1.login-title{font-size:22px;font-weight:600;margin-bottom:.4rem}
 .login-subtitle{font-size:13px;color:var(--text2);margin-bottom:2rem}
 .field{margin-bottom:1rem}
 .field label{display:block;font-size:12px;font-weight:500;color:var(--text2);
   margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em}
 .field select,.field input{width:100%;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;padding:.65rem 1rem;color:var(--text);font-family:var(--font);
+  border-radius:8px;padding:.65rem 1rem;color:var(--text);font-family:system-ui,sans-serif;
   font-size:14px;outline:none;transition:border-color .2s}
 .field select:focus,.field input:focus{border-color:var(--blue)}
 .field select option{background:var(--bg3)}
 .btn-login{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;
-  padding:.75rem;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;
+  padding:.75rem;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;
   transition:background .2s,transform .1s;margin-top:.5rem}
 .btn-login:hover{background:var(--blue2)}
 .btn-login:active{transform:scale(.98)}
@@ -57,7 +57,7 @@ h1.login-title{font-size:22px;font-weight:600;margin-bottom:.4rem}
 .topbar-logo{width:28px;height:28px;background:var(--blue);border-radius:6px;
   display:flex;align-items:center;justify-content:center;font-size:14px}
 .topbar-title{font-size:14px;font-weight:600}
-.topbar-badge{font-size:11px;font-family:var(--mono);background:var(--bg3);
+.topbar-badge{font-size:11px;font-family:'Courier New',monospace;background:var(--bg3);
   border:1px solid var(--border);border-radius:20px;padding:2px 10px;color:var(--text2)}
 .topbar-right{display:flex;align-items:center;gap:10px}
 .user-pill{display:flex;align-items:center;gap:8px;background:var(--bg3);
@@ -66,7 +66,7 @@ h1.login-title{font-size:22px;font-weight:600;margin-bottom:.4rem}
   display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
 .user-name{font-size:12px;font-weight:500}
 .btn-logout{background:none;border:1px solid var(--border);border-radius:6px;
-  padding:4px 10px;color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--font);
+  padding:4px 10px;color:var(--text2);font-size:12px;cursor:pointer;font-family:system-ui,sans-serif;
   transition:all .2s}
 .btn-logout:hover{border-color:var(--red);color:var(--red)}
 
@@ -79,7 +79,7 @@ h1.login-title{font-size:22px;font-weight:600;margin-bottom:.4rem}
 .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:1.5rem}
 .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem}
 .stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
-.stat-val{font-size:24px;font-weight:600;font-family:var(--mono)}
+.stat-val{font-size:24px;font-weight:600;font-family:'Courier New',monospace}
 .stat-val.blue{color:var(--blue)}
 .stat-val.green{color:var(--green)}
 .stat-val.amber{color:var(--amber)}
@@ -97,21 +97,21 @@ h1.login-title{font-size:22px;font-weight:600;margin-bottom:.4rem}
 .day-row.weekend:hover{background:rgba(47,129,247,.08)}
 .day-row.today{background:rgba(63,185,80,.06)}
 .day-row.week-total{background:var(--bg3);border-top:1px solid var(--border)}
-.date-cell{font-size:12px;font-family:var(--mono);color:var(--text2)}
+.date-cell{font-size:12px;font-family:'Courier New',monospace;color:var(--text2)}
 .day-cell{font-size:12px;font-weight:500}
 .day-cell.we{color:var(--blue)}
 .cmd-input{background:var(--bg3);border:1px solid var(--border);border-radius:6px;
-  width:80px;padding:.3rem .6rem;color:var(--text);font-family:var(--mono);font-size:13px;
+  width:80px;padding:.3rem .6rem;color:var(--text);font-family:'Courier New',monospace;font-size:13px;
   font-weight:600;text-align:center;outline:none;transition:border-color .2s}
 .cmd-input:focus{border-color:var(--blue)}
 .cmd-input:disabled{opacity:.4;cursor:default}
-.livr-cell{font-size:13px;font-weight:600;color:var(--green);font-family:var(--mono)}
+.livr-cell{font-size:13px;font-weight:600;color:var(--green);font-family:'Courier New',monospace}
 .livr-cell.empty{color:var(--text3)}
 .note-input{background:transparent;border:none;width:100%;color:var(--text2);
-  font-family:var(--font);font-size:12px;outline:none}
+  font-family:system-ui,sans-serif;font-size:12px;outline:none}
 .note-input::placeholder{color:var(--text3)}
 .btn-save{background:var(--green);color:#fff;border:none;border-radius:8px;
-  padding:.6rem 1.5rem;font-family:var(--font);font-size:13px;font-weight:600;
+  padding:.6rem 1.5rem;font-family:system-ui,sans-serif;font-size:13px;font-weight:600;
   cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
 .btn-save:hover{opacity:.85}
 .btn-save:active{transform:scale(.97)}
@@ -139,12 +139,12 @@ h1.login-title{font-size:22px;font-weight:600;margin-bottom:.4rem}
   color:var(--blue);border-top:1px solid var(--border)}
 .recap-table tr:hover td{background:var(--bg3)}
 .recap-table tr.total-row:hover td{background:var(--bg3)}
-.num-cell{font-family:var(--mono);font-weight:500}
+.num-cell{font-family:'Courier New',monospace;font-weight:500}
 .num-cell.big{font-size:15px;font-weight:700;color:var(--blue)}
 .week-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
 .week-tab{padding:.4rem .9rem;border-radius:20px;font-size:12px;font-weight:500;
   cursor:pointer;border:1px solid var(--border);color:var(--text2);background:none;
-  font-family:var(--font);transition:all .2s}
+  font-family:system-ui,sans-serif;transition:all .2s}
 .week-tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
 .member-detail{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
   padding:1.25rem;margin-top:1rem}
@@ -153,8 +153,8 @@ h1.login-title{font-size:22px;font-weight:600;margin-bottom:.4rem}
 .member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:.4rem}
 .day-bubble{border-radius:8px;padding:.4rem;text-align:center;background:var(--bg3);
   border:1px solid var(--border)}
-.day-bubble .db-date{font-size:9px;color:var(--text3);font-family:var(--mono)}
-.day-bubble .db-val{font-size:14px;font-weight:700;font-family:var(--mono);margin-top:1px}
+.day-bubble .db-date{font-size:9px;color:var(--text3);font-family:'Courier New',monospace}
+.day-bubble .db-val{font-size:14px;font-weight:700;font-family:'Courier New',monospace;margin-top:1px}
 .day-bubble .db-val.has-val{color:var(--green)}
 .day-bubble.we{border-color:rgba(47,129,247,.3)}
 </style>
