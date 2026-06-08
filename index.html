@@ -221,7 +221,7 @@ h1.login-title{font-size:22px;font-weight:600;margin-bottom:.4rem}
 // ── DATA ─────────────────────────────────────────────────────────────────────
 var USERS = {
   admin: { name:"Latreche Zohra (Admin)", pass:"admin2026", isAdmin:true },
-  amb:   { name:"Assistant Media Buyer",              pass:"amb2026"  },
+  amb:   { name:"Assistant Media Buyer",              pass:"amb2026", isAssistant:true  },
   sc:    { name:"Superviseur Créatif",                pass:"sc2026"   },
   cm:    { name:"Community Manager",                  pass:"cm2026"   },
   dw:    { name:"Développeur Web",                    pass:"dw2026"   },
@@ -265,7 +265,7 @@ function doLogin(){
   var u=USERS[uid];
   document.getElementById("top-avatar").textContent=u.name[0];
   document.getElementById("top-name").textContent=u.isAdmin?"Admin":u.name.split("—")[0].trim().split(" ").slice(-1)[0];
-  if(u.isAdmin) renderAdmin(); else renderMembre(uid);
+  if(u.isAdmin) renderAdmin(); else if(u.isAssistant) renderAssistant(); else renderMembre(uid);
 }
 
 function doLogout(){
@@ -382,6 +382,92 @@ function refreshStats(){
   document.querySelectorAll(".livr-cell:not(.empty)").forEach(function(el,i){
     el.textContent=weekVals[i]||0;
   });
+}
+
+// ── ASSISTANT VIEW ────────────────────────────────────────────────────────────
+function renderAssistant(){
+  var memberKeys = Object.keys(USERS).filter(function(k){ return !USERS[k].isAdmin && !USERS[k].isAssistant; });
+  var selectedUid = memberKeys[0];
+
+  function buildHtml(){
+    var data = getData(selectedUid);
+    var u = USERS[selectedUid];
+    var total=0, weeks=WEEKS.map(function(){ return 0; });
+    for(var d=1;d<=30;d++){
+      var v=parseInt(data[d]||0); total+=v;
+      WEEKS.forEach(function(w,wi){ if(d>=w[0]&&d<=w[1]) weeks[wi]+=v; });
+    }
+    var todayDay=(new Date().getMonth()===5&&new Date().getFullYear()===2026)?new Date().getDate():0;
+
+    var html='<div class="month-header"><div>'
+      +'<div class="month-title">Saisie commandes</div>'
+      +'<div class="month-sub">Sélectionne un membre et remplis ses commandes</div></div></div>';
+
+    // Member selector tabs
+    html+='<div class="week-tabs" style="margin-bottom:1.5rem">';
+    memberKeys.forEach(function(uid){
+      var active = uid===selectedUid ? ' active' : '';
+      var shortName = USERS[uid].name.split('—').pop().trim().split(' ')[0];
+      if(USERS[uid].name.indexOf('—')===-1) shortName = USERS[uid].name.split(' ').slice(0,2).join(' ');
+      html+='<button class="week-tab'+active+'" onclick="selectMember(\''+uid+'\')">'+shortName+'</button>';
+    });
+    html+='</div>';
+
+    html+='<div class="stats-row">'
+      +'<div class="stat-card"><div class="stat-label">'+u.name.split('—').pop().trim()+'</div><div class="stat-val blue">'+total+' cmds</div></div>'
+      +'<div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-val green">'+weeks[currentWeekIdx()]+'</div></div>'
+      +'<div class="stat-card"><div class="stat-label">Aujourd\'hui</div><div class="stat-val amber">'+(data[todayDay]||0)+'</div></div>'
+      +'</div>';
+
+    html+='<div class="table-wrap"><div class="table-head">'
+      +'<span>Date</span><span>Jour</span><span>Nb Commandes</span><span>Livraison semaine</span><span>Notes</span>'
+      +'</div>';
+
+    for(var d=1;d<=30;d++){
+      var date=new Date(2026,5,d);
+      var dow=date.getDay();
+      var isWE=(dow===0||dow===6);
+      var isSat=(dow===6);
+      var isToday=(d===todayDay);
+      var cls="day-row"+(isWE?" weekend":"")+(isToday?" today":"");
+      var wIdx=WEEKS.findIndex(function(w){ return d>=w[0]&&d<=w[1]; });
+      var livr=isSat?'<span class="livr-cell">'+weeks[wIdx]+'</span>':'<span class="livr-cell empty">—</span>';
+      var dateStr=String(d).padStart(2,"0")+"/06/2026";
+      var val=data[d]||0;
+      html+='<div class="'+cls+'">'
+        +'<span class="date-cell">'+dateStr+'</span>'
+        +'<span class="day-cell'+(isWE?" we":"")+'">'+JOURS[dow]+'</span>'
+        +'<input class="cmd-input" type="number" min="0" data-day="'+d+'" value="'+val+'" oninput="onAssistantChange(this)">'
+        +livr
+        +'<input class="note-input" placeholder="note..." data-nday="'+d+'" value="'+(data['n'+d]||'')+'" oninput="onAssistantNote(this)">'
+        +'</div>';
+    }
+    html+='</div>';
+    html+='<div class="save-bar"><span class="save-hint">Données sauvegardées automatiquement</span>'
+      +'<span class="saved-msg" id="saved-msg">✓ Sauvegardé</span></div>';
+
+    document.getElementById("main-content").innerHTML=html;
+  }
+
+  window.selectMember = function(uid){
+    selectedUid = uid;
+    buildHtml();
+  };
+
+  window.onAssistantChange = function(el){
+    var data=getData(selectedUid);
+    data[el.dataset.day]=parseInt(el.value)||0;
+    setData(selectedUid,data);
+    showSaved();
+  };
+
+  window.onAssistantNote = function(el){
+    var data=getData(selectedUid);
+    data['n'+el.dataset.nday]=el.value;
+    setData(selectedUid,data);
+  };
+
+  buildHtml();
 }
 
 // ── ADMIN VIEW ────────────────────────────────────────────────────────────────
