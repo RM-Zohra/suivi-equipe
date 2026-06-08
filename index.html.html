@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi Commandes — ETS. LAHMAR WALID</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0D1117;--bg2:#161B22;--bg3:#21262D;--border:#30363D;
+  --text:#E6EDF3;--text2:#8B949E;--text3:#6E7681;
+  --blue:#2F81F7;--blue2:#1F6FEB;--green:#3FB950;--red:#F85149;
+  --amber:#D29922;--purple:#BC8CFF;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* ── LOGIN ── */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;
+  background:var(--bg);position:relative;overflow:hidden}
+#login-screen::before{content:'';position:absolute;width:600px;height:600px;
+  background:radial-gradient(circle,rgba(47,129,247,0.06) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;
+  padding:2.5rem;width:100%;max-width:400px;position:relative;z-index:1}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:2rem}
+.login-logo-icon{width:36px;height:36px;background:var(--blue);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:18px}
+.login-logo-text{font-size:15px;font-weight:600;color:var(--text)}
+.login-logo-sub{font-size:11px;color:var(--text2);font-family:var(--mono)}
+h1.login-title{font-size:22px;font-weight:600;margin-bottom:.4rem}
+.login-subtitle{font-size:13px;color:var(--text2);margin-bottom:2rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--text2);
+  margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em}
+.field select,.field input{width:100%;background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:.65rem 1rem;color:var(--text);font-family:var(--font);
+  font-size:14px;outline:none;transition:border-color .2s}
+.field select:focus,.field input:focus{border-color:var(--blue)}
+.field select option{background:var(--bg3)}
+.btn-login{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;
+  padding:.75rem;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;
+  transition:background .2s,transform .1s;margin-top:.5rem}
+.btn-login:hover{background:var(--blue2)}
+.btn-login:active{transform:scale(.98)}
+.login-error{background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.3);
+  border-radius:8px;padding:.65rem 1rem;font-size:13px;color:var(--red);
+  margin-top:.75rem;display:none}
+
+/* ── APP ── */
+#app{display:none;min-height:100vh;flex-direction:column}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-logo{width:28px;height:28px;background:var(--blue);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;font-size:14px}
+.topbar-title{font-size:14px;font-weight:600}
+.topbar-badge{font-size:11px;font-family:var(--mono);background:var(--bg3);
+  border:1px solid var(--border);border-radius:20px;padding:2px 10px;color:var(--text2)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.user-pill{display:flex;align-items:center;gap:8px;background:var(--bg3);
+  border:1px solid var(--border);border-radius:20px;padding:4px 12px 4px 6px}
+.user-avatar{width:22px;height:22px;border-radius:50%;background:var(--blue);
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
+.user-name{font-size:12px;font-weight:500}
+.btn-logout{background:none;border:1px solid var(--border);border-radius:6px;
+  padding:4px 10px;color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--font);
+  transition:all .2s}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+
+.main{flex:1;padding:1.5rem;max-width:1100px;margin:0 auto;width:100%}
+
+/* ── MEMBRE VIEW ── */
+.month-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.month-title{font-size:20px;font-weight:600}
+.month-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.stat-val{font-size:24px;font-weight:600;font-family:var(--mono)}
+.stat-val.blue{color:var(--blue)}
+.stat-val.green{color:var(--green)}
+.stat-val.amber{color:var(--amber)}
+
+.table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.table-head{padding:.75rem 1rem;border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:110px 60px 120px 120px 1fr;gap:.5rem;
+  font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+.day-row{display:grid;grid-template-columns:110px 60px 120px 120px 1fr;gap:.5rem;
+  padding:.5rem 1rem;border-bottom:1px solid rgba(48,54,61,.5);align-items:center;
+  transition:background .15s}
+.day-row:hover{background:var(--bg3)}
+.day-row:last-child{border-bottom:none}
+.day-row.weekend{background:rgba(47,129,247,.04)}
+.day-row.weekend:hover{background:rgba(47,129,247,.08)}
+.day-row.today{background:rgba(63,185,80,.06)}
+.day-row.week-total{background:var(--bg3);border-top:1px solid var(--border)}
+.date-cell{font-size:12px;font-family:var(--mono);color:var(--text2)}
+.day-cell{font-size:12px;font-weight:500}
+.day-cell.we{color:var(--blue)}
+.cmd-input{background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+  width:80px;padding:.3rem .6rem;color:var(--text);font-family:var(--mono);font-size:13px;
+  font-weight:600;text-align:center;outline:none;transition:border-color .2s}
+.cmd-input:focus{border-color:var(--blue)}
+.cmd-input:disabled{opacity:.4;cursor:default}
+.livr-cell{font-size:13px;font-weight:600;color:var(--green);font-family:var(--mono)}
+.livr-cell.empty{color:var(--text3)}
+.note-input{background:transparent;border:none;width:100%;color:var(--text2);
+  font-family:var(--font);font-size:12px;outline:none}
+.note-input::placeholder{color:var(--text3)}
+.btn-save{background:var(--green);color:#fff;border:none;border-radius:8px;
+  padding:.6rem 1.5rem;font-family:var(--font);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.btn-save:hover{opacity:.85}
+.btn-save:active{transform:scale(.97)}
+.save-bar{display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 0;margin-top:1rem}
+.save-hint{font-size:12px;color:var(--text3)}
+.saved-msg{font-size:12px;color:var(--green);opacity:0;transition:opacity .3s}
+.saved-msg.show{opacity:1}
+
+/* ── ADMIN RECAP ── */
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.admin-title{font-size:20px;font-weight:600}
+.admin-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.recap-table{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:auto}
+.recap-table table{width:100%;border-collapse:collapse;min-width:700px}
+.recap-table th{padding:.65rem 1rem;font-size:11px;font-weight:600;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.05em;text-align:center;
+  border-bottom:1px solid var(--border);white-space:nowrap}
+.recap-table th:first-child{text-align:left}
+.recap-table td{padding:.6rem 1rem;font-size:13px;text-align:center;
+  border-bottom:1px solid rgba(48,54,61,.4)}
+.recap-table td:first-child{text-align:left;font-weight:500}
+.recap-table tr:last-child td{border-bottom:none}
+.recap-table tr.total-row td{background:var(--bg3);font-weight:700;
+  color:var(--blue);border-top:1px solid var(--border)}
+.recap-table tr:hover td{background:var(--bg3)}
+.recap-table tr.total-row:hover td{background:var(--bg3)}
+.num-cell{font-family:var(--mono);font-weight:500}
+.num-cell.big{font-size:15px;font-weight:700;color:var(--blue)}
+.week-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.week-tab{padding:.4rem .9rem;border-radius:20px;font-size:12px;font-weight:500;
+  cursor:pointer;border:1px solid var(--border);color:var(--text2);background:none;
+  font-family:var(--font);transition:all .2s}
+.week-tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.member-detail{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:1.25rem;margin-top:1rem}
+.member-detail-title{font-size:14px;font-weight:600;margin-bottom:1rem;
+  display:flex;align-items:center;gap:.5rem}
+.member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:.4rem}
+.day-bubble{border-radius:8px;padding:.4rem;text-align:center;background:var(--bg3);
+  border:1px solid var(--border)}
+.day-bubble .db-date{font-size:9px;color:var(--text3);font-family:var(--mono)}
+.day-bubble .db-val{font-size:14px;font-weight:700;font-family:var(--mono);margin-top:1px}
+.day-bubble .db-val.has-val{color:var(--green)}
+.day-bubble.we{border-color:rgba(47,129,247,.3)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">📦</div>
+      <div>
+        <div class="login-logo-text">ETS. LAHMAR WALID</div>
+        <div class="login-logo-sub">Suivi Commandes · Juin 2026</div>
+      </div>
+    </div>
+    <h1 class="login-title">Connexion</h1>
+    <p class="login-subtitle">Sélectionne ton profil et entre ton code d'accès</p>
+    <div class="field">
+      <label>Profil</label>
+      <select id="sel-user">
+        <option value="">— Choisir —</option>
+        <option value="admin">👑 Admin (Latreche Zohra)</option>
+        <option value="amb">Assistant Media Buyer</option>
+        <option value="sc">Superviseur Créatif</option>
+        <option value="cm">Community Manager</option>
+        <option value="dw">Développeur Web</option>
+        <option value="rrp">Responsable Recherche Produits</option>
+        <option value="mv1">Monteur Vidéo #1 — Medjahed Asmaa</option>
+        <option value="mv2">Monteur Vidéo #2 — Medjdoubi Amina</option>
+        <option value="mv3">Monteur Vidéo #3 — Aouabdi Nadia</option>
+        <option value="mv4">Monteur Vidéo #4 — Sedikki Kawter</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Code d'accès</label>
+      <input type="password" id="inp-pass" placeholder="••••••" autocomplete="off">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Accéder →</button>
+    <div class="login-error" id="login-err">Code incorrect. Réessaie.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;flex-direction:column">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">📦</div>
+      <div class="topbar-title">Suivi Commandes</div>
+      <div class="topbar-badge">Juin 2026</div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-pill">
+        <div class="user-avatar" id="top-avatar"></div>
+        <span class="user-name" id="top-name"></span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </div>
+  <div class="main" id="main-content"></div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+var USERS = {
+  admin: { name:"Latreche Zohra (Admin)", pass:"admin2026", isAdmin:true },
+  amb:   { name:"Assistant Media Buyer",              pass:"amb2026"  },
+  sc:    { name:"Superviseur Créatif",                pass:"sc2026"   },
+  cm:    { name:"Community Manager",                  pass:"cm2026"   },
+  dw:    { name:"Développeur Web",                    pass:"dw2026"   },
+  rrp:   { name:"Responsable Recherche Produits",     pass:"rrp2026"  },
+  mv1:   { name:"Monteur Vidéo #1 — Medjahed Asmaa",  pass:"mv12026"  },
+  mv2:   { name:"Monteur Vidéo #2 — Medjdoubi Amina", pass:"mv22026"  },
+  mv3:   { name:"Monteur Vidéo #3 — Aouabdi Nadia",   pass:"mv32026"  },
+  mv4:   { name:"Monteur Vidéo #4 — Sedikki Kawter",  pass:"mv42026"  },
+};
+
+var JOURS = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
+var WEEKS = [[1,7],[8,14],[15,21],[22,28],[29,30]];
+var currentUser = null;
+
+// Storage key
+function storKey(uid){ return "cmds_juin2026_"+uid; }
+
+function getData(uid){
+  try{ var d=JSON.parse(localStorage.getItem(storKey(uid))); return d||{}; }
+  catch(e){ return {}; }
+}
+function setData(uid,d){ localStorage.setItem(storKey(uid),JSON.stringify(d)); }
+
+// ── LOGIN ─────────────────────────────────────────────────────────────────────
+document.getElementById("inp-pass").addEventListener("keydown",function(e){
+  if(e.key==="Enter") doLogin();
+});
+
+function doLogin(){
+  var uid  = document.getElementById("sel-user").value;
+  var pass = document.getElementById("inp-pass").value.trim();
+  var err  = document.getElementById("login-err");
+  if(!uid){ err.style.display="block"; err.textContent="Sélectionne ton profil."; return; }
+  if(!USERS[uid] || USERS[uid].pass !== pass){
+    err.style.display="block"; err.textContent="Code incorrect. Réessaie."; return;
+  }
+  err.style.display="none";
+  currentUser = uid;
+  document.getElementById("login-screen").style.display="none";
+  var app=document.getElementById("app"); app.style.display="flex";
+  var u=USERS[uid];
+  document.getElementById("top-avatar").textContent=u.name[0];
+  document.getElementById("top-name").textContent=u.isAdmin?"Admin":u.name.split("—")[0].trim().split(" ").slice(-1)[0];
+  if(u.isAdmin) renderAdmin(); else renderMembre(uid);
+}
+
+function doLogout(){
+  currentUser=null;
+  document.getElementById("app").style.display="none";
+  document.getElementById("login-screen").style.display="flex";
+  document.getElementById("sel-user").value="";
+  document.getElementById("inp-pass").value="";
+}
+
+// ── MEMBRE VIEW ───────────────────────────────────────────────────────────────
+function renderMembre(uid){
+  var data = getData(uid);
+  var u = USERS[uid];
+  var total=0, weeks=WEEKS.map(function(){ return 0; });
+  for(var d=1;d<=30;d++){
+    var v=parseInt(data[d]||0);
+    total+=v;
+    WEEKS.forEach(function(w,wi){ if(d>=w[0]&&d<=w[1]) weeks[wi]+=v; });
+  }
+  var todayDay = (new Date().getMonth()===5 && new Date().getFullYear()===2026)
+    ? new Date().getDate() : 0;
+
+  var html = '<div class="month-header"><div><div class="month-title">'+u.name+'</div>'
+    +'<div class="month-sub">Juin 2026 · Suivi quotidien des commandes créées</div></div></div>';
+
+  html += '<div class="stats-row">'
+    +'<div class="stat-card"><div class="stat-label">Total Juin</div><div class="stat-val blue">'+total+'</div></div>'
+    +'<div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-val green">'+weeks[currentWeekIdx()]+'</div></div>'
+    +'<div class="stat-card"><div class="stat-label">Aujourd'hui</div><div class="stat-val amber">'+(data[todayDay]||0)+'</div></div>'
+    +'</div>';
+
+  html += '<div class="table-wrap"><div class="table-head">'
+    +'<span>Date</span><span>Jour</span><span>Nb Commandes</span><span>Livraison semaine</span><span>Notes</span>'
+    +'</div>';
+
+  for(var d=1;d<=30;d++){
+    var date=new Date(2026,5,d);
+    var dow=date.getDay();
+    var isWE=(dow===0||dow===6);
+    var isSat=(dow===6);
+    var isToday=(d===todayDay);
+    var cls="day-row"+(isWE?" weekend":"")+(isToday?" today":"");
+    var wIdx=WEEKS.findIndex(function(w){ return d>=w[0]&&d<=w[1]; });
+    var livr="";
+    if(isSat){ livr='<span class="livr-cell">'+weeks[wIdx]+'</span>'; }
+    else{ livr='<span class="livr-cell empty">—</span>'; }
+    var dateStr=String(d).padStart(2,"0")+"/06/2026";
+    var val=data[d]||0;
+    html+='<div class="'+cls+'">'
+      +'<span class="date-cell">'+dateStr+'</span>'
+      +'<span class="day-cell'+(isWE?" we":"")+'">'+JOURS[dow]+'</span>'
+      +'<input class="cmd-input" type="number" min="0" data-day="'+d+'" value="'+val+'" oninput="onCmdChange(this)">'
+      +livr
+      +'<input class="note-input" placeholder="note..." data-nday="'+d+'" value="'+(data['n'+d]||'')+'" oninput="onNoteChange(this)">'
+      +'</div>';
+  }
+  html+='</div>';
+  html+='<div class="save-bar"><span class="save-hint">Les données sont sauvegardées automatiquement</span>'
+    +'<div style="display:flex;align-items:center;gap:1rem">'
+    +'<span class="saved-msg" id="saved-msg">✓ Sauvegardé</span>'
+    +'<button class="btn-save" onclick="saveData()">💾 Sauvegarder</button>'
+    +'</div></div>';
+
+  document.getElementById("main-content").innerHTML=html;
+}
+
+function currentWeekIdx(){
+  var d=new Date();
+  if(d.getMonth()!==5||d.getFullYear()!==2026) return 0;
+  var day=d.getDate();
+  return WEEKS.findIndex(function(w){ return day>=w[0]&&day<=w[1]; });
+}
+
+function onCmdChange(el){
+  var data=getData(currentUser);
+  data[el.dataset.day]=parseInt(el.value)||0;
+  setData(currentUser,data);
+  showSaved();
+  refreshStats();
+}
+
+function onNoteChange(el){
+  var data=getData(currentUser);
+  data['n'+el.dataset.nday]=el.value;
+  setData(currentUser,data);
+}
+
+function saveData(){
+  showSaved();
+  refreshStats();
+}
+
+function showSaved(){
+  var m=document.getElementById("saved-msg");
+  if(!m) return;
+  m.classList.add("show");
+  setTimeout(function(){ m.classList.remove("show"); },2000);
+}
+
+function refreshStats(){
+  var data=getData(currentUser);
+  var total=0, weekVals=WEEKS.map(function(){ return 0; });
+  var todayDay=(new Date().getMonth()===5&&new Date().getFullYear()===2026)?new Date().getDate():0;
+  for(var d=1;d<=30;d++){
+    var v=parseInt(data[d]||0); total+=v;
+    WEEKS.forEach(function(w,wi){ if(d>=w[0]&&d<=w[1]) weekVals[wi]+=v; });
+  }
+  var cards=document.querySelectorAll(".stat-val");
+  if(cards[0]) cards[0].textContent=total;
+  if(cards[1]) cards[1].textContent=weekVals[currentWeekIdx()];
+  if(cards[2]) cards[2].textContent=data[todayDay]||0;
+  // refresh livraisons
+  document.querySelectorAll(".livr-cell:not(.empty)").forEach(function(el,i){
+    el.textContent=weekVals[i]||0;
+  });
+}
+
+// ── ADMIN VIEW ────────────────────────────────────────────────────────────────
+function renderAdmin(){
+  var memberKeys = Object.keys(USERS).filter(function(k){ return !USERS[k].isAdmin; });
+  var totals={};
+  var weekTotals=WEEKS.map(function(){ return 0; });
+  var grandTotal=0;
+
+  memberKeys.forEach(function(uid){
+    var data=getData(uid);
+    var t=0; var ww=WEEKS.map(function(){ return 0; });
+    for(var d=1;d<=30;d++){
+      var v=parseInt(data[d]||0); t+=v;
+      WEEKS.forEach(function(w,wi){ if(d>=w[0]&&d<=w[1]) ww[wi]+=v; });
+    }
+    totals[uid]={total:t,weeks:ww};
+    grandTotal+=t;
+    WEEKS.forEach(function(_,wi){ weekTotals[wi]+=ww[wi]; });
+  });
+
+  var html='<div class="admin-header"><div>'
+    +'<div class="admin-title">📊 Recap Global — Équipe</div>'
+    +'<div class="admin-sub">Juin 2026 · Vue administrateur</div></div></div>';
+
+  html+='<div class="stats-row">'
+    +'<div class="stat-card"><div class="stat-label">Total équipe</div><div class="stat-val blue">'+grandTotal+'</div></div>';
+  WEEKS.forEach(function(w,wi){
+    html+='<div class="stat-card"><div class="stat-label">S'+(wi+1)+' ('+w[0]+'-'+w[1]+' Juin)</div>'
+      +'<div class="stat-val '+(wi===currentWeekIdx()?"green":"")+'">'+weekTotals[wi]+'</div></div>';
+  });
+  html+='</div>';
+
+  html+='<div class="recap-table"><table><thead><tr>'
+    +'<th>Membre</th>';
+  WEEKS.forEach(function(w,wi){ html+='<th>S'+(wi+1)+'<br><span style="font-weight:400;font-size:10px">'+w[0]+'-'+w[1]+' Juin</span></th>'; });
+  html+='<th>TOTAL JUIN</th></tr></thead><tbody>';
+
+  memberKeys.forEach(function(uid){
+    var t=totals[uid];
+    html+='<tr style="cursor:pointer" onclick="showMemberDetail(''+uid+'')">'
+      +'<td>'+USERS[uid].name+'</td>';
+    t.weeks.forEach(function(v){ html+='<td class="num-cell">'+v+'</td>'; });
+    html+='<td class="num-cell big">'+t.total+'</td></tr>';
+  });
+
+  html+='<tr class="total-row"><td>TOTAL ÉQUIPE</td>';
+  weekTotals.forEach(function(v){ html+='<td class="num-cell">'+v+'</td>'; });
+  html+='<td class="num-cell big">'+grandTotal+'</td></tr>';
+  html+='</tbody></table></div>';
+
+  html+='<div id="member-detail-zone"></div>';
+
+  document.getElementById("main-content").innerHTML=html;
+}
+
+function showMemberDetail(uid){
+  var data=getData(uid);
+  var zone=document.getElementById("member-detail-zone");
+  var html='<div class="member-detail"><div class="member-detail-title">📅 '+USERS[uid].name+' — détail jour par jour</div>'
+    +'<div class="member-grid">';
+  for(var d=1;d<=30;d++){
+    var date=new Date(2026,5,d);
+    var dow=date.getDay();
+    var isWE=(dow===0||dow===6);
+    var v=parseInt(data[d]||0);
+    html+='<div class="day-bubble'+(isWE?" we":"")+'">'
+      +'<div class="db-date">'+String(d).padStart(2,"0")+'/06</div>'
+      +'<div class="db-val'+(v>0?" has-val":"")+'">'+v+'</div>'
+      +'</div>';
+  }
+  html+='</div></div>';
+  zone.innerHTML=html;
+  zone.scrollIntoView({behavior:"smooth"});
+}
+</script>
+</body>
+</html>
