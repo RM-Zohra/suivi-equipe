@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Suivi Équipe — Team Zohra</title>
@@ -205,6 +207,100 @@ table.dt tr:last-child td{border-bottom:none}
 .bub .bv.has{color:var(--blue)}
 .bub.we{border-color:var(--bluel)}
 </style>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyD6OKhtnB8Az10tUiHaxL3OXcUX2RcSnM",
+      authDomain: "suiviequipe-ads2.firebaseapp.com",
+      projectId: "suiviequipe-ads2",
+      storageBucket: "suiviequipe-ads2.firebasestorage.app",
+      messagingSenderId: "830978059276",
+      appId: "1:830978059276:web:3136b047fc52824b0a1229",
+      measurementId: "G-LLDHM W2RLH"
+    };
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.firestore();
+
+    // ── FIREBASE DATA FUNCTIONS ──────────────────────
+    function skey(uid){ return "slw_v4_"+uid+"_"+monthKey(); }
+    // (moved to Firebase section)
+
+    function getData(uid){
+      try{ return JSON.parse(localStorage.getItem(skey(uid)))||{}; }catch(e){ return {}; }
+    }
+
+    function setData(uid, d){
+      localStorage.setItem(skey(uid), JSON.stringify(d));
+      // Sync to Firebase
+      db.collection("suivi").doc(skey(uid)).set(d).catch(function(e){ console.log("Firebase write error:", e); });
+    }
+
+    function getTable(name){
+      try{ return JSON.parse(localStorage.getItem(tkey(name)))||[]; }catch(e){ return []; }
+    }
+
+    function setTable(name, rows){
+      localStorage.setItem(tkey(name), JSON.stringify(rows));
+      // Sync to Firebase
+      db.collection("tables").doc(tkey(name)).set({rows: rows}).catch(function(e){ console.log("Firebase write error:", e); });
+    }
+
+    function getMsgs(uid){
+      try{ return JSON.parse(localStorage.getItem("msg_v4_"+uid))||[]; }catch(e){ return []; }
+    }
+
+    function setMsgs(uid, m){
+      localStorage.setItem("msg_v4_"+uid, JSON.stringify(m));
+      db.collection("messages").doc(uid).set({msgs: m}).catch(function(e){ console.log("Firebase write error:", e); });
+    }
+
+    // ── LOAD FROM FIREBASE on login ──────────────────
+    function loadAllFromFirebase(callback){
+      var memberKeys = Object.keys(USERS);
+      var promises = [];
+
+      // Load member data for current month
+      memberKeys.forEach(function(uid){
+        var key = skey(uid);
+        promises.push(
+          db.collection("suivi").doc(key).get().then(function(doc){
+            if(doc.exists){
+              localStorage.setItem(key, JSON.stringify(doc.data()));
+            }
+          }).catch(function(e){ console.log("Load error:", e); })
+        );
+
+        // Load messages
+        promises.push(
+          db.collection("messages").doc(uid).get().then(function(doc){
+            if(doc.exists && doc.data().msgs){
+              localStorage.setItem("msg_v4_"+uid, JSON.stringify(doc.data().msgs));
+            }
+          }).catch(function(e){ console.log("Load msg error:", e); })
+        );
+      });
+
+      // Load tables
+      var tableNames = ["strat_crea","perfads_scaling","perfads_off","perfads_winner"];
+      memberKeys.filter(function(k){ return USERS[k].role==="mv"; }).forEach(function(uid){
+        tableNames.push("perf_"+uid);
+        tableNames.push("nperf_"+uid);
+      });
+      tableNames.forEach(function(name){
+        var key = tkey(name);
+        promises.push(
+          db.collection("tables").doc(key).get().then(function(doc){
+            if(doc.exists && doc.data().rows){
+              localStorage.setItem(key, JSON.stringify(doc.data().rows));
+            }
+          }).catch(function(e){ console.log("Load table error:", e); })
+        );
+      });
+
+      Promise.all(promises).then(function(){ callback(); }).catch(function(){ callback(); });
+    }
+  </script>
 </head>
 <body>
 
@@ -300,10 +396,10 @@ var _WEEKS_STATIC=[[1,7],[8,14],[15,21],[22,28],[29,30]];
 var WEEKS=[[1,7],[8,14],[15,21],[22,28],[29,30]]; // updated on month change
 var currentUser=null;
 
-function skey(uid){return "slw_v4_"+uid+"_"+monthKey();}
-function getData(uid){try{return JSON.parse(localStorage.getItem(skey(uid)))||{};}catch(e){return {};}}
-function setData(uid,d){localStorage.setItem(skey(uid),JSON.stringify(d));}
-function mkey(uid){return "msg_v4_"+uid;}  // messages = global (pas par mois)
+// (moved to Firebase section)
+// (moved to Firebase section)
+// (moved to Firebase section)
+// (moved to Firebase section)
 function getMsgs(uid){try{return JSON.parse(localStorage.getItem(mkey(uid)))||[];}catch(e){return [];}}
 function setMsgs(uid,m){localStorage.setItem(mkey(uid),JSON.stringify(m));}
 function hasUnread(uid){return getMsgs(uid).some(function(m){return m.to===currentUser&&!m.read;});}
@@ -679,6 +775,485 @@ function renderAdmin(tab){
   };
 }
 </script>
+
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">💙</div>
+      <div>
+        <div class="login-logo-text">Team Zohra</div>
+        <div class="login-logo-sub">Suivi Équipe · Juin 2026</div>
+      </div>
+    </div>
+    <h1 class="login-title">Bienvenue 👋</h1>
+    <p class="login-subtitle">Sélectionne ton profil et entre ton code d'accès</p>
+    <div class="field">
+      <label>Profil</label>
+      <select id="sel-user">
+        <option value="">— Choisir —</option>
+        <option value="admin">👑 RM — Latreche Zohra</option>
+        <option value="amb">Assistant Media Buyer</option>
+        <option value="sc">Superviseur Créatif</option>
+        <option value="cm">Community Manager</option>
+        <option value="dw">Développeur Web</option>
+        <option value="rrp">Responsable Recherche Produits</option>
+        <option value="mv1">Monteur Vidéo #1 — Medjahed Asmaa</option>
+        <option value="mv2">Monteur Vidéo #2 — Medjdoubi Amina</option>
+        <option value="mv3">Monteur Vidéo #3 — Aouabdi Nadia</option>
+        <option value="mv4">Monteur Vidéo #4 — Sedikki Kawter</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Code d'accès</label>
+      <input type="password" id="inp-pass" placeholder="••••••" autocomplete="off">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Accéder →</button>
+    <div class="login-error" id="login-err">Code incorrect.</div>
+  </div>
+</div>
+
+<div id="app" style="display:none;flex-direction:column">
+  <div class="topbar">
+    <div class="topbar-left" style="position:relative">
+      <div class="topbar-logo">💙</div>
+      <div class="topbar-title">Suivi Équipe</div>
+      <div id="month-badge" class="topbar-badge" style="cursor:pointer" onclick="toggleMonthPicker()">📅 <span id="month-label">Juin 2026</span> ▾</div>
+      <div id="month-picker" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:1rem;z-index:200;box-shadow:0 8px 32px rgba(37,99,235,.15);min-width:260px">
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.75rem">
+          <select id="sel-month" style="flex:1;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:.4rem .6rem;color:var(--text);font-size:13px;outline:none"></select>
+          <select id="sel-year" style="width:90px;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:.4rem .6rem;color:var(--text);font-size:13px;outline:none"></select>
+        </div>
+        <button onclick="applyMonth()" style="width:100%;background:linear-gradient(135deg,var(--blue),var(--lilac));color:#fff;border:none;border-radius:8px;padding:.5rem;font-size:13px;font-weight:700;cursor:pointer">Confirmer</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="user-pill">
+        <div class="user-avatar" id="top-avatar"></div>
+        <span class="user-name" id="top-name"></span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </div>
+  <div class="main" id="main-content"></div>
+</div>
+
+<script>
+// ── MOIS ACTIF ────────────────────────────────────────
+var MONTHS_FR=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+var _today = new Date();
+var currentMonth = { m: _today.getMonth(), y: _today.getFullYear() };
+
+function monthKey(){ return currentMonth.y+"_"+(currentMonth.m+1); }
+function daysInMonth(m,y){ return new Date(y,m+1,0).getDate(); }
+function isCurrentMonth(){ var n=new Date(); return currentMonth.m===n.getMonth()&&currentMonth.y===n.getFullYear(); }
+function isPastMonth(){ var n=new Date(); return currentMonth.y<n.getFullYear()||(currentMonth.y===n.getFullYear()&&currentMonth.m<n.getMonth()); }
+function isReadOnly(){ return isPastMonth(); }
+function monthLabel(){ return MONTHS_FR[currentMonth.m]+" "+currentMonth.y; }
+
+var USERS={
+  admin:{ name:"RM — Latreche Zohra",            pass:"admin2026", role:"admin"       },
+  amb:  { name:"Assistant Media Buyer",           pass:"amb2026",   role:"assistant"   },
+  sc:   { name:"Superviseur Créatif",             pass:"sc2026",    role:"superviseur" },
+  cm:   { name:"Community Manager",              pass:"cm2026",    role:"cm"          },
+  dw:   { name:"Développeur Web",                pass:"dw2026",    role:"dw"          },
+  rrp:  { name:"Responsable Recherche Produits", pass:"rrp2026",   role:"membre"      },
+  mv1:  { name:"MV #1 — Medjahed Asmaa",         pass:"mv12026",   role:"mv"          },
+  mv2:  { name:"MV #2 — Medjdoubi Amina",        pass:"mv22026",   role:"mv"          },
+  mv3:  { name:"MV #3 — Aouabdi Nadia",          pass:"mv32026",   role:"mv"          },
+  mv4:  { name:"MV #4 — Sedikki Kawter",         pass:"mv42026",   role:"mv"          },
+};
+var JOURS=["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
+var _WEEKS_STATIC=[[1,7],[8,14],[15,21],[22,28],[29,30]];
+// Use getWeeks(daysInMonth(m,y)) for dynamic weeks
+var WEEKS=[[1,7],[8,14],[15,21],[22,28],[29,30]]; // updated on month change
+var currentUser=null;
+
+// (moved to Firebase section)
+// (moved to Firebase section)
+// (moved to Firebase section)
+// (moved to Firebase section)
+function getMsgs(uid){try{return JSON.parse(localStorage.getItem(mkey(uid)))||[];}catch(e){return [];}}
+function setMsgs(uid,m){localStorage.setItem(mkey(uid),JSON.stringify(m));}
+function hasUnread(uid){return getMsgs(uid).some(function(m){return m.to===currentUser&&!m.read;});}
+
+function getCols(uid){
+  var role=USERS[uid].role;
+  var cols=[
+    {key:'cmd', label:'Nb Commandes',        cls:'bl',  edit:['assistant'],         num:true},
+    {key:'cree',label:'Créée semaine',        cls:'gr',  edit:[],                    num:true, auto:true, satOnly:true},
+    {key:'ls',  label:'Livrée semaine',       cls:'gr',  edit:['assistant'],         num:true, satOnly:true},
+    {key:'lj',  label:'Livrée jour',          cls:'am',  edit:['assistant'],         num:true},
+    {key:'rsup',label:'Remarque Superviseur', cls:'li',  edit:['superviseur'],       num:false},
+    {key:'note',label:'Notes',                cls:'',    edit:['assistant'],         num:false},
+  ];
+  if(role==='cm'||role==='dw'||role==='superviseur'){
+    cols.splice(5,0,{key:'camp',label:'Vidéos en campagnes',cls:'bl',edit:['assistant','sc','cm','dw'],num:true});
+  }
+  if(role==='mv'){
+    cols.splice(5,0,{key:'wina',label:'Winner Actif',   cls:'am',edit:['assistant'],num:true});
+    cols.splice(6,0,{key:'wind',label:'Winner Détecté', cls:'gr',edit:['assistant'],num:true});
+  }
+  return cols;
+}
+
+function weekSums(uid){
+  var d=getData(uid);
+  return WEEKS.map(function(w){var s=0;for(var i=w[0];i<=w[1];i++)s+=parseInt(d['cmd_'+i]||0);return s;});
+}
+function totalCmds(uid){return weekSums(uid).reduce(function(a,b){return a+b;},0);}
+function totalLivree(uid){var d=getData(uid),s=0;for(var i=1;i<=daysInMonth(currentMonth.m,currentMonth.y);i++)s+=parseInt(d['lj_'+i]||0);return s;}
+function todayD(){var n=new Date();return(n.getMonth()===currentMonth.m&&n.getFullYear()===currentMonth.y)?n.getDate():0;}
+function curWeek(){
+  var day=todayD();if(!day)return 0;
+  var days=daysInMonth(currentMonth.m,currentMonth.y);
+  var weeks=getWeeks(days);
+  return weeks.findIndex(function(w){return day>=w[0]&&day<=w[1];});
+}
+function getWeeks(days){
+  var w=[[1,7],[8,14],[15,21],[22,28]];
+  if(days>28) w.push([29,days]);
+  return w;
+}
+
+/* LOGIN */
+document.getElementById("inp-pass").addEventListener("keydown",function(e){if(e.key==="Enter")doLogin();});
+function doLogin(){
+  var uid=document.getElementById("sel-user").value;
+  var pass=document.getElementById("inp-pass").value.trim();
+  var err=document.getElementById("login-err");
+  if(!uid){err.style.display="block";err.textContent="Sélectionne ton profil.";return;}
+  if(!USERS[uid]||USERS[uid].pass!==pass){err.style.display="block";err.textContent="Code incorrect.";return;}
+  err.style.display="none";
+  currentUser=uid;
+  document.getElementById("login-screen").style.display="none";
+  var app=document.getElementById("app");app.style.display="flex";
+  document.getElementById("top-avatar").textContent=USERS[uid].name[0];
+  document.getElementById("top-name").textContent=USERS[uid].name.split("—")[0].trim().split(" ")[0];
+  var role=USERS[uid].role;
+  if(role==="admin") renderAdmin("recap");
+  else if(role==="assistant") renderAssistant();
+  else if(role==="superviseur") renderSup();
+  else renderMembre(uid);
+}
+function doLogout(){
+  currentUser=null;
+  document.getElementById("app").style.display="none";
+  document.getElementById("login-screen").style.display="flex";
+  document.getElementById("sel-user").value="";
+  document.getElementById("inp-pass").value="";
+}
+function showSaved(){var m=document.getElementById("saved-msg");if(m){m.classList.add("show");setTimeout(function(){m.classList.remove("show");},2000);}}
+
+window.saveField=function(el){
+  var uid=el.dataset.uid,key=el.dataset.key,d=getData(uid);
+  d[key]=el.type==="number"?(parseInt(el.value)||0):el.value;
+  setData(uid,d);showSaved();
+};
+
+/* TABLE */
+function renderTable(uid,viewerRole){
+  var d=getData(uid),cols=getCols(uid),ws=weekSums(uid),td=todayD();
+  var clsMap={gr:'green',am:'amber',bl:'blue',li:'lilac'};
+  var html='<div class="table-wrap"><table class="dt"><thead><tr><th>Date</th><th>Jour</th>';
+  cols.forEach(function(c){html+='<th>'+c.label+'</th>';});
+  html+='</tr></thead><tbody>';
+  for(var day=1;day<=daysInMonth(currentMonth.m,currentMonth.y);day++){
+    var dt=new Date(currentMonth.y,currentMonth.m,day),dow=dt.getDay(),isWE=(dow===0||dow===6),isSat=(dow===6),isToday=(day===td);
+    var wi=WEEKS.findIndex(function(w){return day>=w[0]&&day<=w[1];});
+    html+='<tr class="'+(isWE?"we ":"")+(isToday?"tod":"")+'">';
+    html+='<td>'+String(day).padStart(2,"0")+'/06/2026</td>';
+    html+='<td style="font-weight:600;'+(isWE?"color:var(--blue)":"")+'">'+JOURS[dow]+'</td>';
+    cols.forEach(function(c){
+      var canEdit=c.edit.indexOf(viewerRole)!==-1;
+      if(c.auto){html+='<td>'+(isSat?'<span class="sat-tot">'+ws[wi]+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>';return;}
+      if(c.satOnly&&!isSat){html+='<td><span style="color:var(--text3)">—</span></td>';return;}
+      var val=d[c.key+'_'+day]||(c.num?0:'');
+      if(!c.num){
+        if(canEdit)html+='<td><input class="ti" data-uid="'+uid+'" data-key="'+c.key+'_'+day+'" value="'+String(val).replace(/"/g,'&quot;')+'" oninput="saveField(this)" placeholder="..."></td>';
+        else html+='<td style="font-size:11px;color:var(--text2);text-align:left;max-width:130px">'+val+'</td>';
+        return;
+      }
+      var cc='ci'+(c.cls?' '+c.cls:'');
+      var colorStyle=parseInt(val)>0&&c.cls?'color:var(--'+clsMap[c.cls]+')':'color:var(--text2)';
+      if(canEdit)html+='<td><input class="'+cc+'" type="number" min="0" data-uid="'+uid+'" data-key="'+c.key+'_'+day+'" value="'+val+'" oninput="saveField(this)"></td>';
+      else html+='<td style="'+colorStyle+';font-weight:600">'+val+'</td>';
+    });
+    html+='</tr>';
+  }
+  html+='</tbody></table></div>';
+  return html;
+}
+
+/* CHAT */
+function renderChat(uid,viewerUid){
+  var msgs=getMsgs(uid);
+  msgs.forEach(function(m){if(m.to===viewerUid)m.read=true;});
+  setMsgs(uid,msgs);
+  var html='<div class="chat-wrap">';
+  html+='<div class="chat-header"><div class="chat-dot"></div> Message avec RM — Latreche Zohra</div>';
+  html+='<div class="chat-msgs" id="chat-msgs">';
+  if(!msgs.length)html+='<div class="no-msg">Aucun message pour le moment 💬</div>';
+  msgs.forEach(function(m){
+    var isSent=(m.from===viewerUid);
+    html+='<div class="msg '+(isSent?"sent":"recv")+'">'+m.text+'<div class="msg-meta">'+m.time+'</div></div>';
+  });
+  html+='</div>';
+  html+='<div class="chat-inp-row">';
+  html+='<input class="chat-inp" id="chat-inp" placeholder="Écrire un message..." onkeydown="if(event.key===\'Enter\')sendMsg(\''+uid+'\',\''+viewerUid+'\')">';
+  html+='<button class="btn-send" onclick="sendMsg(\''+uid+'\',\''+viewerUid+'\')">Envoyer</button>';
+  html+='</div></div>';
+  return html;
+}
+
+window.sendMsg=function(uid,fromUid){
+  var inp=document.getElementById("chat-inp");
+  var text=inp.value.trim();if(!text)return;
+  var msgs=getMsgs(uid),now=new Date();
+  var time=String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
+  msgs.push({from:fromUid,to:(fromUid==="admin"?uid:"admin"),text:text,time:time,read:false});
+  setMsgs(uid,msgs);inp.value="";
+  var zone=document.getElementById("chat-zone");
+  if(zone){zone.innerHTML=renderChat(uid,fromUid);}
+  setTimeout(function(){var cm=document.getElementById("chat-msgs");if(cm)cm.scrollTop=cm.scrollHeight;},30);
+};
+
+/* EVALUATION SECTION */
+function renderEval(){
+  var memberKeys=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin"&&USERS[k].role!=="assistant";});
+  var rows=memberKeys.map(function(uid){
+    var cree=totalCmds(uid),livree=totalLivree(uid),pct=cree>0?Math.round(livree/cree*100):0;
+    return {uid:uid,cree:cree,livree:livree,pct:pct};
+  });
+  rows.sort(function(a,b){return b.pct-a.pct;});
+
+  var html='<div class="eval-section">';
+  html+='<div class="eval-title">🏆 Comparaison équipe — Créées vs Livrées</div>';
+  html+='<div class="eval-compare-table"><table><thead><tr>';
+  html+='<th>#</th><th style="text-align:left">Membre</th>';
+  html+='<th>Créées</th><th>Livrées</th><th>Taux</th>';
+  html+='<th class="bar-cell">Performance</th></tr></thead><tbody>';
+
+  rows.forEach(function(r,i){
+    var rankCls=i===0?"rank-1":i===1?"rank-2":i===2?"rank-3":"rank-n";
+    var pctCls=r.pct>=80?"high":r.pct>=50?"mid":"low";
+    var pctBadgeCls=r.pct>=80?"pct-high":r.pct>=50?"pct-mid":"pct-low";
+    html+='<tr>';
+    html+='<td><span class="rank-badge '+rankCls+'">'+(i+1)+'</span></td>';
+    html+='<td style="text-align:left;font-weight:600">'+USERS[r.uid].name+'</td>';
+    html+='<td class="num" style="color:var(--blue)">'+r.cree+'</td>';
+    html+='<td class="num" style="color:var(--green)">'+r.livree+'</td>';
+    html+='<td><span class="pct-badge '+pctBadgeCls+'">'+r.pct+'%</span></td>';
+    html+='<td class="bar-cell"><div class="bar-wrap" style="width:160px">';
+    html+='<div class="bar-fill '+pctCls+'" style="width:'+Math.min(r.pct,100)+'%"></div></div></td>';
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
+
+  // Mini cards
+  html+='<div class="eval-cards">';
+  rows.forEach(function(r){
+    var pctCls=r.pct>=80?"high":r.pct>=50?"mid":"low";
+    var fillColor=r.pct>=80?"linear-gradient(90deg,#16A34A,#4ADE80)":r.pct>=50?"linear-gradient(90deg,#D97706,#FCD34D)":"linear-gradient(90deg,#DC2626,#F87171)";
+    var scoreColor=r.pct>=80?"var(--green)":r.pct>=50?"var(--amber)":"var(--red)";
+    html+='<div class="eval-card">';
+    html+='<div class="eval-card-name">'+USERS[r.uid].name+'</div>';
+    html+='<div class="eval-card-bar"><div class="eval-card-fill" style="width:'+Math.min(r.pct,100)+'%;height:8px;border-radius:20px;background:'+fillColor+'"></div></div>';
+    html+='<div class="eval-card-stats"><span>Créées: <b>'+r.cree+'</b></span><span>Livrées: <b>'+r.livree+'</b></span></div>';
+    html+='<div class="eval-score" style="color:'+scoreColor+'">'+r.pct+'% <span style="font-size:12px;color:var(--text2);font-weight:400">livraison</span></div>';
+    html+='</div>';
+  });
+  html+='</div></div>';
+  return html;
+}
+
+/* MEMBRE VIEW */
+function renderMembre(uid){
+  var u=USERS[uid],ws=weekSums(uid),td=todayD(),d=getData(uid);
+  var curTab=window._memTab||"data";
+  var unread=hasUnread(uid);
+  var html='<div class="page-title">'+u.name+'</div>';
+  html+='<div class="page-sub">\'+monthLabel()+\' · Consulte tes données</div>';
+  html+='<div class="view-tabs">';
+  html+='<button class="vtab'+(curTab==="data"?" active":"")+'" onclick="switchMemTab(\'data\')">📊 Mes données</button>';
+  html+='<button class="vtab'+(curTab==="msg"?" active":"")+'" onclick="switchMemTab(\'msg\')">';
+  html+='💬 Message RM'+(unread?'<span class="bdot"></span>':'')+'</button>';
+  html+='</div>';
+  if(curTab==="data"){
+    html+='<div class="stats-row">';
+    html+='<div class="stat-card"><div class="stat-label">Total Juin</div><div class="stat-val blue">'+ws.reduce(function(a,b){return a+b;},0)+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-val green">'+ws[curWeek()]+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Aujourd\'hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Livrées total</div><div class="stat-val lilac">'+totalLivree(uid)+'</div></div>';
+    html+='</div>';
+    html+=renderTable(uid,'membre');
+  } else {
+    html+='<div id="chat-zone">'+renderChat(uid,uid)+'</div>';
+  }
+  html+='<div style="padding:.5rem 0;text-align:right"><span class="saved-ok" id="saved-msg">✓ Sauvegardé</span></div>';
+  document.getElementById("main-content").innerHTML=html;
+  window.switchMemTab=function(tab){window._memTab=tab;renderMembre(uid);};
+  if(curTab==="msg")setTimeout(function(){var cm=document.getElementById("chat-msgs");if(cm)cm.scrollTop=cm.scrollHeight;},50);
+}
+
+/* ASSISTANT VIEW */
+function renderAssistant(){
+  var memberKeys=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin"&&USERS[k].role!=="assistant";});
+  var selUid=window._asel||memberKeys[0];
+  var curTab=window._atab||"data";
+
+  var html='<div class="page-title">Saisie — Assistant</div>';
+  html+='<div class="page-sub">Sélectionne un membre et remplis ses données</div>';
+  html+='<div class="view-tabs">';
+  html+='<button class="vtab'+(curTab==="data"?" active":"")+'" onclick="aTab(\'data\')">📝 Saisie</button>';
+  html+='<button class="vtab'+(curTab==="eval"?" active":"")+'" onclick="aTab(\'eval\')">🏆 Évaluation</button>';
+  html+='</div>';
+
+  if(curTab==="data"){
+    var ws=weekSums(selUid),td=todayD(),d=getData(selUid);
+    html+='<div class="member-tabs">';
+    memberKeys.forEach(function(uid){
+      var short=USERS[uid].name.indexOf("—")!==-1?USERS[uid].name.split("—").pop().trim().split(" ")[0]:USERS[uid].name.split(" ").slice(0,2).join(" ");
+      html+='<button class="mtab'+(uid===selUid?" active":"")+'" onclick="asel(\''+uid+'\')">'+short+'</button>';
+    });
+    html+='</div>';
+    html+='<div class="stats-row">';
+    html+='<div class="stat-card"><div class="stat-label">Total Juin</div><div class="stat-val blue">'+ws.reduce(function(a,b){return a+b;},0)+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-val green">'+ws[curWeek()]+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Aujourd\'hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Livrées total</div><div class="stat-val lilac">'+totalLivree(selUid)+'</div></div>';
+    html+='</div>';
+    html+=renderTable(selUid,'assistant');
+  } else {
+    html+=renderEval();
+  }
+  html+='<div style="padding:.5rem 0;text-align:right"><span class="saved-ok" id="saved-msg">✓ Sauvegardé</span></div>';
+  document.getElementById("main-content").innerHTML=html;
+  window.asel=function(uid){window._asel=uid;renderAssistant();};
+  window.aTab=function(t){window._atab=t;renderAssistant();};
+}
+
+/* SUPERVISEUR VIEW */
+function renderSup(){
+  var memberKeys=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin"&&USERS[k].role!=="superviseur";});
+  var selUid=window._ssel||memberKeys[0];
+  var html='<div class="page-title">Superviseur Créatif</div>';
+  html+='<div class="page-sub">Ajoute tes remarques pour chaque membre</div>';
+  html+='<div class="member-tabs">';
+  memberKeys.forEach(function(uid){
+    var short=USERS[uid].name.indexOf("—")!==-1?USERS[uid].name.split("—").pop().trim().split(" ")[0]:USERS[uid].name.split(" ").slice(0,2).join(" ");
+    html+='<button class="mtab'+(uid===selUid?" active":"")+'" onclick="ssel(\''+uid+'\')">'+short+'</button>';
+  });
+  html+='</div>';
+  html+=renderTable(selUid,'superviseur');
+  html+='<div style="padding:.5rem 0;text-align:right"><span class="saved-ok" id="saved-msg">✓ Sauvegardé</span></div>';
+  document.getElementById("main-content").innerHTML=html;
+  window.ssel=function(uid){window._ssel=uid;renderSup();};
+}
+
+/* ADMIN VIEW */
+function renderAdmin(tab){
+  var memberKeys=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin";});
+  var curTab=tab||window._adTab||"recap";
+  window._adTab=curTab;
+  var totalUnread=memberKeys.filter(function(uid){return getMsgs(uid).some(function(m){return m.to==="admin"&&!m.read;});}).length;
+
+  var html='<div class="page-title">Dashboard RM 💙</div>';
+  html+='<div class="page-sub">\'+monthLabel()+\' · Vue complète équipe</div>';
+  html+='<div class="view-tabs">';
+  html+='<button class="vtab'+(curTab==="recap"?" active":"")+'" onclick="adTab(\'recap\')">📊 Recap</button>';
+  html+='<button class="vtab'+(curTab==="eval"?" active":"")+'" onclick="adTab(\'eval\')">🏆 Évaluation</button>';
+  html+='<button class="vtab'+(curTab==="msg"?" active":"")+'" onclick="adTab(\'msg\')">';
+  html+='💬 Messages'+(totalUnread>0?'<span class="bdot"></span>':'')+'</button>';
+  html+='</div>';
+
+  if(curTab==="recap"){
+    var grandTotal=0,weekTotals=WEEKS.map(function(){return 0;}),totals={};
+    memberKeys.forEach(function(uid){
+      var ws=weekSums(uid),t=ws.reduce(function(a,b){return a+b;},0);
+      totals[uid]={total:t,weeks:ws,livree:totalLivree(uid)};
+      grandTotal+=t;ws.forEach(function(v,i){weekTotals[i]+=v;});
+    });
+    html+='<div class="stats-row">';
+    html+='<div class="stat-card"><div class="stat-label">Total équipe</div><div class="stat-val blue">'+grandTotal+'</div></div>';
+    WEEKS.forEach(function(w,wi){
+      html+='<div class="stat-card"><div class="stat-label">S'+(wi+1)+' ('+w[0]+'-'+w[1]+')</div><div class="stat-val '+(wi===curWeek()?"green":"blue")+'">'+weekTotals[wi]+'</div></div>';
+    });
+    html+='</div>';
+    html+='<div class="recap-wrap"><table><thead><tr><th>Membre</th>';
+    WEEKS.forEach(function(w,wi){html+='<th>S'+(wi+1)+'</th>';});
+    html+='<th>Total</th><th>Livrées</th></tr></thead><tbody>';
+    memberKeys.forEach(function(uid){
+      var t=totals[uid];
+      html+='<tr style="cursor:pointer" onclick="adShowDetail(\''+uid+'\')">';
+      html+='<td>'+USERS[uid].name+'</td>';
+      t.weeks.forEach(function(v){html+='<td class="num">'+v+'</td>';});
+      html+='<td class="num big">'+t.total+'</td>';
+      html+='<td class="num" style="color:var(--green)">'+t.livree+'</td>';
+      html+='</tr>';
+    });
+    html+='<tr class="tot"><td>TOTAL</td>';
+    weekTotals.forEach(function(v){html+='<td class="num">'+v+'</td>';});
+    html+='<td class="num big">'+grandTotal+'</td><td></td></tr>';
+    html+='</tbody></table></div>';
+    html+='<div class="detail-zone" id="detail-zone"></div>';
+
+  } else if(curTab==="eval"){
+    html+=renderEval();
+
+  } else if(curTab==="msg"){
+    var selMsgUid=window._adMsg||memberKeys[0];
+    html+='<div style="display:grid;grid-template-columns:190px 1fr;gap:1rem">';
+    html+='<div class="msg-sidebar">';
+    memberKeys.forEach(function(uid){
+      var unread=getMsgs(uid).some(function(m){return m.to==="admin"&&!m.read;});
+      var short=USERS[uid].name.indexOf("—")!==-1?USERS[uid].name.split("—").pop().trim().split(" ")[0]:USERS[uid].name.split(" ")[0];
+      html+='<div class="msg-sidebar-item'+(uid===selMsgUid?" active":"")+'" onclick="adSelMsg(\''+uid+'\')">';
+      html+=short+(unread?'<span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block"></span>':'');
+      html+='</div>';
+    });
+    html+='</div>';
+    html+='<div id="chat-zone">'+renderChat(selMsgUid,"admin")+'</div>';
+    html+='</div>';
+    window.adSelMsg=function(uid){
+      window._adMsg=uid;
+      var zone=document.getElementById("chat-zone");
+      if(zone){zone.innerHTML=renderChat(uid,"admin");setTimeout(function(){var cm=document.getElementById("chat-msgs");if(cm)cm.scrollTop=cm.scrollHeight;},30);}
+      document.querySelectorAll(".msg-sidebar-item").forEach(function(el){
+        var u=el.getAttribute("onclick").match(/'([^']+)'/)[1];
+        el.classList.toggle("active",u===uid);
+      });
+    };
+    setTimeout(function(){var cm=document.getElementById("chat-msgs");if(cm)cm.scrollTop=cm.scrollHeight;},50);
+  }
+
+  document.getElementById("main-content").innerHTML=html;
+  window.adTab=function(t){renderAdmin(t);};
+  window.adShowDetail=function(uid){
+    var d=getData(uid),zone=document.getElementById("detail-zone");if(!zone)return;
+    var cree=totalCmds(uid),livree=totalLivree(uid),pct=cree>0?Math.round(livree/cree*100):0;
+    var html='<div class="detail-card"><div class="detail-title">📅 '+USERS[uid].name+'</div>';
+    html+='<div class="bubble-grid">';
+    for(var day=1;day<=daysInMonth(currentMonth.m,currentMonth.y);day++){
+      var dt=new Date(currentMonth.y,currentMonth.m,day),isWE=(dt.getDay()===0||dt.getDay()===6),v=parseInt(d['cmd_'+day]||0);
+      html+='<div class="bub'+(isWE?" we":"")+'">'+'<div class="bd">'+String(day).padStart(2,"0")+'/06</div>'+'<div class="bv'+(v>0?" has":"")+'">'+v+'</div></div>';
+    }
+    html+='</div>';
+    html+='<div style="display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap">';
+    html+='<div class="stat-card"><div class="stat-label">Créées</div><div class="stat-val blue">'+cree+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Livrées</div><div class="stat-val green">'+livree+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Taux</div><div class="stat-val '+(pct>=80?"green":pct>=50?"amber":"")+'">'+pct+'%</div></div>';
+    html+='</div></div>';
+    zone.innerHTML=html;zone.scrollIntoView({behavior:"smooth"});
+  };
+}
+</script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+
+
 </body>
 </html>
 <script>
@@ -687,9 +1262,9 @@ function renderAdmin(tab){
 // ══════════════════════════════════════════════════════
 
 // ── STORAGE HELPERS ───────────────────────────────────
-function tkey(name){ return "tbl_v4_"+name+"_"+monthKey(); }
-function getTable(name){ try{ return JSON.parse(localStorage.getItem(tkey(name)))||[]; }catch(e){ return []; } }
-function setTable(name,rows){ localStorage.setItem(tkey(name),JSON.stringify(rows)); }
+// (moved to Firebase section)
+// (moved to Firebase section)
+// (moved to Firebase section)
 
 // ── GENERIC TABLE RENDERER ────────────────────────────
 function genericTable(name, cols, canEdit, addRowFn){
