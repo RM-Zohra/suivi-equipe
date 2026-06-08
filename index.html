@@ -859,7 +859,7 @@ function renderMembre(uid){
       h+='<div class="obj-nums"><span>'+cree2+' / '+obj2+'</span><span class="obj-pct">'+pct2+'%</span></div></div>';
     }
     // Export
-    h+='<div style="margin-top:.75rem"><button class="btn-export" onclick="exportCSV(''+uid+'')">📤 Exporter mes donnees CSV</button></div>';
+    h+='<div style="margin-top:.75rem"><button class="btn-export" data-uid="'+uid+'" onclick="exportCSV(this.dataset.uid)">📤 Exporter mes donnees CSV</button></div>';
   } else {
     h+='<div id="chat-zone">'+renderChat(uid,uid)+'</div>';
   }
@@ -1014,9 +1014,9 @@ function renderAdmin(tab){
     h+='<div class="dz" id="dz"></div>';
     // Annonce composer
     h+='<div class="ann-compose" style="margin-top:1rem">';
-    h+='<div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:.5rem">📢 Envoyer une annonce a l'equipe</div>';
+    h+='<div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:.5rem">📢 Envoyer une annonce a l&#39;equipe</div>';
     h+='<textarea class="ann-textarea" id="ann-txt" placeholder="Ecris ton message..."></textarea>';
-    h+='<button class="btn-send-ann" onclick="sendAnnouncement(document.getElementById('ann-txt').value)">Envoyer a l'equipe</button></div>';
+    h+='<button class="btn-send-ann" onclick="sendAnnouncement(document.getElementById(&quot;ann-txt&quot;).value)">Envoyer a l&#39;equipe</button></div>';
     // Objectifs
     var mks2=Object.keys(USERS).filter(function(k){return USERS[k].role!=="admin";});
     var objs=getObjectifs();
