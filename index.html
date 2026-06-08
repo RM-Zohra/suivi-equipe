@@ -422,7 +422,7 @@ function renderAdmin(){
 
   memberKeys.forEach(function(uid){
     var t=totals[uid];
-    html+='<tr style="cursor:pointer" onclick="showMemberDetail(''+uid+'')">'
+    html+='<tr style="cursor:pointer" onclick="showMemberDetail(\''+uid+'\')">'
       +'<td>'+USERS[uid].name+'</td>';
     t.weeks.forEach(function(v){ html+='<td class="num-cell">'+v+'</td>'; });
     html+='<td class="num-cell big">'+t.total+'</td></tr>';
