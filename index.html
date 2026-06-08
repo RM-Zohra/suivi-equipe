@@ -766,7 +766,7 @@ function renderMembre(uid){
     html+='<div class="stats-row">';
     html+='<div class="stat-card"><div class="stat-label">Total Juin</div><div class="stat-val blue">'+ws.reduce(function(a,b){return a+b;},0)+'</div></div>';
     html+='<div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-val green">'+ws[curWeek()]+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Aujourd\'hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Aujourd&#39;hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
     html+='<div class="stat-card"><div class="stat-label">Livrées total</div><div class="stat-val lilac">'+totalLivree(uid)+'</div></div>';
     html+='</div>';
     html+=renderTable(uid,'membre');
@@ -804,7 +804,7 @@ function renderAssistant(){
     html+='<div class="stats-row">';
     html+='<div class="stat-card"><div class="stat-label">Total Juin</div><div class="stat-val blue">'+ws.reduce(function(a,b){return a+b;},0)+'</div></div>';
     html+='<div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-val green">'+ws[curWeek()]+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Aujourd\'hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Aujourd&#39;hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
     html+='<div class="stat-card"><div class="stat-label">Livrées total</div><div class="stat-val lilac">'+totalLivree(selUid)+'</div></div>';
     html+='</div>';
     html+=renderTable(selUid,'assistant');
@@ -1170,7 +1170,7 @@ window.renderMV = function(uid){
     html+='<div class="stats-row">';
     html+='<div class="stat-card"><div class="stat-label">Total Juin</div><div class="stat-val blue">'+ws.reduce(function(a,b){return a+b;},0)+'</div></div>';
     html+='<div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-val green">'+ws[curWeek()]+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Aujourd\'hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Aujourd&#39;hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
     html+='</div>';
     html+=renderTable(uid,'membre');
   } else if(curTab==="perf"){
@@ -1224,7 +1224,7 @@ renderAssistant = function(){
     html+='<div class="stats-row">';
     html+='<div class="stat-card"><div class="stat-label">Total Juin</div><div class="stat-val blue">'+ws.reduce(function(a,b){return a+b;},0)+'</div></div>';
     html+='<div class="stat-card"><div class="stat-label">Cette semaine</div><div class="stat-val green">'+ws[curWeek()]+'</div></div>';
-    html+='<div class="stat-card"><div class="stat-label">Aujourd\'hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
+    html+='<div class="stat-card"><div class="stat-label">Aujourd&#39;hui</div><div class="stat-val amber">'+(d['cmd_'+td]||0)+'</div></div>';
     html+='</div>';
     html+=renderTable(selUid,'assistant');
 
